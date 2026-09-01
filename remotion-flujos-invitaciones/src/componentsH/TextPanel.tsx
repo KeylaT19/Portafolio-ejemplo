@@ -29,7 +29,7 @@ const Line: React.FC<{ text: string }> = ({ text }) => {
         opacity,
         transform: `translateY(${rise}px)`,
         fontFamily: `${headingFont}, Arial, sans-serif`,
-        fontSize: 56,
+        fontSize: 60,
         fontWeight: 800,
         color: "#FFFFFF",
         lineHeight: 1.25,

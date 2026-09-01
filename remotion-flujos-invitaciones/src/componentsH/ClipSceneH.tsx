@@ -3,11 +3,12 @@ import { ClipSpecH } from "../timelineH";
 import { PhoneMock } from "./PhoneMock";
 import { TextPanel } from "./TextPanel";
 import { HeaderH } from "./HeaderH";
+import { ScreenTag } from "./ScreenTag";
 
 export const ClipSceneH: React.FC<{ clip: ClipSpecH }> = ({ clip }) => {
   return (
     <AbsoluteFill>
-      <HeaderH tag={clip.tag} />
+      <HeaderH />
       <div
         style={{
           position: "absolute",
@@ -27,9 +28,12 @@ export const ClipSceneH: React.FC<{ clip: ClipSpecH }> = ({ clip }) => {
           left: 622,
           bottom: 0,
           display: "flex",
-          alignItems: "center",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
         }}
       >
+        <ScreenTag label={clip.tag} />
         <TextPanel captions={clip.captions} />
       </div>
     </AbsoluteFill>
