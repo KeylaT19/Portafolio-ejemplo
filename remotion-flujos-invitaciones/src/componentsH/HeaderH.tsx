@@ -1,11 +1,6 @@
 import { Img, staticFile } from "remotion";
 
-export const HeaderH: React.FC<{
-  sectionTag: string;
-  stepLabel: string;
-  stepIndex: number;
-  stepCount: number;
-}> = ({ sectionTag, stepLabel, stepIndex, stepCount }) => {
+export const HeaderH: React.FC<{ tag: string }> = ({ tag }) => {
   return (
     <div
       style={{
@@ -15,78 +10,43 @@ export const HeaderH: React.FC<{
         right: 56,
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "flex-start",
+        alignItems: "center",
         zIndex: 5,
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <div
-          style={{
-            width: 46,
-            height: 46,
-            borderRadius: "50%",
-            overflow: "hidden",
-            flexShrink: 0,
-            boxShadow: "0 0 0 2px rgba(255,255,255,0.5)",
-          }}
-        >
-          <Img
-            src={staticFile("videos/logo_hq.png")}
-            style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scale(1.12)" }}
-          />
-        </div>
-        <div>
-          <div
-            style={{
-              fontFamily: "Inter, Arial, sans-serif",
-              fontSize: 20,
-              fontWeight: 700,
-              color: "#FFFFFF",
-              lineHeight: 1.2,
-            }}
-          >
-            Centro Asturiano de México, A.C.
-          </div>
-          <div
-            style={{
-              fontFamily: "Inter, Arial, sans-serif",
-              fontSize: 14,
-              fontWeight: 700,
-              letterSpacing: 1,
-              color: "#F5B84D",
-              marginTop: 2,
-            }}
-          >
-            {sectionTag}
-          </div>
-        </div>
-      </div>
-
-      <div style={{ textAlign: "right" }}>
+        <Img
+          src={staticFile("videos/logo_transparent.png")}
+          style={{ width: 46, height: 46, objectFit: "contain", flexShrink: 0 }}
+        />
         <div
           style={{
             fontFamily: "Inter, Arial, sans-serif",
-            fontSize: 15,
-            fontWeight: 800,
-            letterSpacing: 1,
-            color: "#F5B84D",
+            fontSize: 20,
+            fontWeight: 700,
+            color: "#FFFFFF",
+            lineHeight: 1.2,
           }}
         >
-          PASO {stepIndex} DE {stepCount} · {stepLabel}
+          Centro Asturiano de México, A.C.
         </div>
-        <div style={{ display: "flex", gap: 6, marginTop: 8, justifyContent: "flex-end" }}>
-          {Array.from({ length: stepCount }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                width: 30,
-                height: 5,
-                borderRadius: 3,
-                background: i < stepIndex ? "#F5B84D" : "rgba(255,255,255,0.22)",
-              }}
-            />
-          ))}
-        </div>
+      </div>
+
+      <div
+        style={{
+          padding: "12px 30px",
+          borderRadius: 999,
+          background: "rgba(255,255,255,0.10)",
+          border: "1px solid rgba(255,255,255,0.22)",
+          fontFamily: "Inter, Arial, sans-serif",
+          fontSize: 17,
+          fontWeight: 800,
+          letterSpacing: 1.5,
+          textTransform: "uppercase",
+          color: "#F5B84D",
+        }}
+      >
+        {tag}
       </div>
     </div>
   );

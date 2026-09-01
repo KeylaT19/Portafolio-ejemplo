@@ -1,27 +1,20 @@
 import { Composition } from "remotion";
 import { InvitacionesFlowH } from "./InvitacionesFlowH";
 import {
+  CLIPS_H,
   CLOSING_DURATION_H,
   FPS_H,
   secH,
-  SECTIONS_H,
+  TITLE_DURATION_H,
   TRANSITION_FRAMES,
 } from "./timelineH";
 
 const totalDurationFrames = () => {
-  let scenes = 0;
-  let sceneFrames = 0;
-
-  for (const section of SECTIONS_H) {
-    scenes += 1;
-    sceneFrames += secH(section.titleDuration);
-    for (const clip of section.clips) {
-      scenes += 1;
-      sceneFrames += secH(clip.duration);
-    }
-  }
-  scenes += 1;
-  sceneFrames += secH(CLOSING_DURATION_H);
+  const scenes = 1 /* title */ + CLIPS_H.length + 1 /* closing */;
+  const sceneFrames =
+    secH(TITLE_DURATION_H) +
+    CLIPS_H.reduce((acc, clip) => acc + secH(clip.duration), 0) +
+    secH(CLOSING_DURATION_H);
 
   const transitions = scenes - 1;
   return sceneFrames - transitions * TRANSITION_FRAMES;

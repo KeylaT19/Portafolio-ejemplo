@@ -2,7 +2,7 @@ import { AbsoluteFill } from "remotion";
 import { LogoH } from "./LogoH";
 import { headingFont } from "../fonts";
 
-export const TitleCardH: React.FC<{ title: string; subtitle: string }> = ({ title, subtitle }) => {
+export const TitleCardH: React.FC<{ title: string }> = ({ title }) => {
   return (
     <AbsoluteFill
       style={{
@@ -12,31 +12,20 @@ export const TitleCardH: React.FC<{ title: string; subtitle: string }> = ({ titl
         padding: "0 200px",
       }}
     >
-      <LogoH size={150} />
+      <LogoH size={260} />
       <div
         style={{
-          marginTop: 32,
+          marginTop: 40,
           fontFamily: `${headingFont}, Arial, sans-serif`,
-          fontSize: 60,
-          fontWeight: 700,
+          fontSize: 64,
+          fontWeight: 800,
           color: "#FFFFFF",
           textAlign: "center",
-          lineHeight: 1.15,
+          lineHeight: 1.2,
+          maxWidth: 1400,
         }}
       >
         {title}
-      </div>
-      <div
-        style={{
-          marginTop: 18,
-          fontFamily: "Inter, Arial, sans-serif",
-          fontSize: 26,
-          fontWeight: 700,
-          color: "#F5B84D",
-          textAlign: "center",
-        }}
-      >
-        {subtitle}
       </div>
     </AbsoluteFill>
   );

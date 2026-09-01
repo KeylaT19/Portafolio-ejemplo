@@ -29,12 +29,12 @@ const Line: React.FC<{ text: string }> = ({ text }) => {
         opacity,
         transform: `translateY(${rise}px)`,
         fontFamily: `${headingFont}, Arial, sans-serif`,
-        fontSize: 46,
-        fontWeight: 700,
+        fontSize: 56,
+        fontWeight: 800,
         color: "#FFFFFF",
-        lineHeight: 1.28,
+        lineHeight: 1.25,
         textAlign: "left",
-        maxWidth: 1120,
+        maxWidth: 1180,
       }}
     >
       {text}
@@ -44,7 +44,7 @@ const Line: React.FC<{ text: string }> = ({ text }) => {
 
 export const TextPanel: React.FC<{ captions: CaptionSpec[] }> = ({ captions }) => {
   return (
-    <div style={{ position: "relative", width: 1120, height: 320, display: "flex", alignItems: "center" }}>
+    <div style={{ position: "relative", width: 1180, height: 380, display: "flex", alignItems: "center" }}>
       {captions.map((c, i) => (
         <Sequence key={i} from={secH(c.from)} durationInFrames={secH(c.duration)} layout="none">
           <Line text={c.text} />

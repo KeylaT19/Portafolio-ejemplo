@@ -5,7 +5,15 @@ import { BackgroundH } from "./componentsH/BackgroundH";
 import { TitleCardH } from "./componentsH/TitleCardH";
 import { ClosingCardH } from "./componentsH/ClosingCardH";
 import { ClipSceneH } from "./componentsH/ClipSceneH";
-import { CLOSING_DURATION_H, secH, SECTIONS_H, TRANSITION_FRAMES } from "./timelineH";
+import {
+  CLIPS_H,
+  CLOSING_DURATION_H,
+  CLOSING_TITLE,
+  MAIN_TITLE,
+  secH,
+  TITLE_DURATION_H,
+  TRANSITION_FRAMES,
+} from "./timelineH";
 
 export const InvitacionesFlowH: React.FC = () => {
   const transition = (
@@ -17,43 +25,35 @@ export const InvitacionesFlowH: React.FC = () => {
 
   const items: React.ReactNode[] = [];
 
-  SECTIONS_H.forEach((section, sIdx) => {
+  items.push(
+    <TransitionSeries.Sequence key="title" durationInFrames={secH(TITLE_DURATION_H)}>
+      <AbsoluteFill>
+        <BackgroundH />
+        <TitleCardH title={MAIN_TITLE} />
+      </AbsoluteFill>
+    </TransitionSeries.Sequence>,
+  );
+  items.push(transition);
+
+  CLIPS_H.forEach((clip, i) => {
     items.push(
-      <TransitionSeries.Sequence
-        key={`title-${sIdx}`}
-        durationInFrames={secH(section.titleDuration)}
-      >
+      <TransitionSeries.Sequence key={`clip-${i}`} durationInFrames={secH(clip.duration)}>
         <AbsoluteFill>
           <BackgroundH />
-          <TitleCardH title={section.title} subtitle={section.subtitle} />
+          <ClipSceneH clip={clip} />
         </AbsoluteFill>
       </TransitionSeries.Sequence>,
     );
     items.push(transition);
-
-    section.clips.forEach((clip, cIdx) => {
-      items.push(
-        <TransitionSeries.Sequence key={`clip-${sIdx}-${cIdx}`} durationInFrames={secH(clip.duration)}>
-          <AbsoluteFill>
-            <BackgroundH />
-            <ClipSceneH
-              clip={clip}
-              sectionTag={section.tag}
-              stepIndex={cIdx + 1}
-              stepCount={section.clips.length}
-            />
-          </AbsoluteFill>
-        </TransitionSeries.Sequence>,
-      );
-      items.push(transition);
-    });
   });
 
+  // The loop above already left a trailing `transition` after the last
+  // clip, which doubles as the separator before the closing card.
   items.push(
     <TransitionSeries.Sequence key="closing" durationInFrames={secH(CLOSING_DURATION_H)}>
       <AbsoluteFill>
         <BackgroundH />
-        <ClosingCardH />
+        <ClosingCardH title={CLOSING_TITLE} />
       </AbsoluteFill>
     </TransitionSeries.Sequence>,
   );

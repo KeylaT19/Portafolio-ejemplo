@@ -3,9 +3,10 @@ import { Img, OffthreadVideo, staticFile } from "remotion";
 // Native capture resolution of the source screen recordings.
 const NATIVE_W = 572;
 const NATIVE_H = 1280;
-// Crop window: hide the OS status bar / browser chrome at the top and the
-// Android system nav bar at the bottom, keep the app's own UI in between.
-const CROP_TOP = 50;
+// Crop window: hide the OS status bar AND the browser address bar (which
+// can briefly reappear at the top on page loads / scroll-up) at the top,
+// plus the Android system nav bar at the bottom. Keep the app's own UI.
+const CROP_TOP = 135;
 const CROP_BOTTOM = 70;
 const CROP_H = NATIVE_H - CROP_TOP - CROP_BOTTOM;
 
@@ -17,7 +18,7 @@ export const PhoneMock: React.FC<{
   type: "video" | "image";
   src: string;
   screenWidth?: number;
-}> = ({ type, src, screenWidth = 520 }) => {
+}> = ({ type, src, screenWidth = 360 }) => {
   const screenHeight = (CROP_H / NATIVE_W) * screenWidth;
   const frameWidth = screenWidth + BEZEL_SIDE * 2;
   const frameHeight = screenHeight + BEZEL_TOP + BEZEL_BOTTOM;
