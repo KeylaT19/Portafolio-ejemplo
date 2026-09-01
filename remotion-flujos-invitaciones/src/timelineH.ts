@@ -81,7 +81,7 @@ export const CLIPS_H: ClipSpecH[] = [
         duration: 5,
       },
       {
-        text: "…o entra al detalle y toca “Salir del grupo” para confirmar.",
+        text: "También puedes entrar al detalle para confirmar que es el grupo correcto y tocar el botón “Salir del grupo”.",
         from: 5,
         duration: 13.5,
       },
