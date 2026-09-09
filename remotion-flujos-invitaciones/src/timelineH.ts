@@ -1,21 +1,11 @@
+import { ClipSpec } from "./captionTypes";
+
 export const FPS_H = 30;
 export const secH = (s: number) => Math.round(s * FPS_H);
 
 export const TRANSITION_FRAMES = 15; // 0.5s crossfade between every scene
 
-export type CaptionSpec = {
-  text: string;
-  from: number; // seconds, relative to clip start
-  duration: number; // seconds
-};
-
-export type ClipSpecH = {
-  type: "video" | "image";
-  src: string;
-  duration: number; // seconds
-  tag: string; // pill above the description text: "Pantalla de ..."
-  captions: CaptionSpec[];
-};
+export type ClipSpecH = ClipSpec;
 
 export const MAIN_TITLE = "Cómo aceptar y salir de tus grupos y partidas";
 export const CLOSING_TITLE = "Así de fácil aceptas y sales de tus grupos y partidas";

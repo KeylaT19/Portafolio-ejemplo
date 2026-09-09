@@ -1,11 +1,11 @@
 import { AbsoluteFill } from "remotion";
-import { ClipSpecH } from "../timelineH";
+import { ClipSpec } from "../captionTypes";
 import { PhoneMock } from "./PhoneMock";
 import { TextPanel } from "./TextPanel";
 import { HeaderH } from "./HeaderH";
 import { ScreenTag } from "./ScreenTag";
 
-export const ClipSceneH: React.FC<{ clip: ClipSpecH }> = ({ clip }) => {
+export const ClipSceneH: React.FC<{ clip: ClipSpec }> = ({ clip }) => {
   return (
     <AbsoluteFill>
       <HeaderH />

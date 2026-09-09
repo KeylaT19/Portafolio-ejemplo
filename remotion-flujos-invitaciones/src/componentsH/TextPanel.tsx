@@ -1,5 +1,5 @@
 import { interpolate, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
-import { CaptionSpec, secH } from "../timelineH";
+import { CaptionSpec } from "../captionTypes";
 import { headingFont } from "../fonts";
 
 const Line: React.FC<{ text: string }> = ({ text }) => {
@@ -43,10 +43,13 @@ const Line: React.FC<{ text: string }> = ({ text }) => {
 };
 
 export const TextPanel: React.FC<{ captions: CaptionSpec[] }> = ({ captions }) => {
+  const { fps } = useVideoConfig();
+  const sec = (s: number) => Math.round(s * fps);
+
   return (
     <div style={{ position: "relative", width: 1180, height: 380, display: "flex", alignItems: "center" }}>
       {captions.map((c, i) => (
-        <Sequence key={i} from={secH(c.from)} durationInFrames={secH(c.duration)} layout="none">
+        <Sequence key={i} from={sec(c.from)} durationInFrames={sec(c.duration)} layout="none">
           <Line text={c.text} />
         </Sequence>
       ))}
