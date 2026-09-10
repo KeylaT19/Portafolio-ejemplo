@@ -7,7 +7,7 @@ export const TRANSITION_FRAMES_S = 15; // 0.5s crossfade between every scene
 
 export type ClipSpecS = ClipSpec;
 
-export const MAIN_TITLE_S = "Qué hacer si falta un jugador en tu partida";
+export const MAIN_TITLE_S = "¿Qué hacer si falta un jugador en tu partida?";
 export const CLOSING_TITLE_S = "¡Así de fácil mantienes tu equipo completo!";
 
 export const CONTEXT_TITLE_S = "¿No llegaron todos a la cancha?";
