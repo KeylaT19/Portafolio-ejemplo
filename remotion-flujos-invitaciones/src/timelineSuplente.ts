@@ -30,26 +30,26 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "video",
     src: "videos/suplente_unirse.mp4",
-    duration: 6.5,
+    duration: 5.2,
     tag: "Pantalla de Inicio",
     captions: [
       {
         text: "Si una partida ya está en juego, tócala y confirma “Sí, unirme” para agregarte como suplente.",
         from: 0,
-        duration: 6.5,
+        duration: 5.2,
       },
     ],
   },
   {
     type: "image",
     src: "videos/suplente_exito.png",
-    duration: 6,
+    duration: 7.3,
     tag: "Pantalla de Inicio",
     captions: [
       {
         text: "Listo: ya quedaste registrado como suplente de esa partida.",
         from: 0,
-        duration: 6,
+        duration: 7.3,
       },
     ],
   },
