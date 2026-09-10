@@ -10,8 +10,8 @@ export type ClipSpecS = ClipSpec;
 export const MAIN_TITLE_S = "Cómo agregarte como suplente y salir de una partida";
 export const CLOSING_TITLE_S = "Así de fácil te unes o sales de una partida";
 
-export const TITLE_DURATION_S = 209 / 30;
-export const CLOSING_DURATION_S = 209 / 30;
+export const TITLE_DURATION_S = 365 / 30;
+export const CLOSING_DURATION_S = 365 / 30;
 
 export const CLIPS_S: ClipSpecS[] = [
   {
@@ -30,13 +30,13 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "video",
     src: "videos/suplente_unirse.mp4",
-    duration: 5.5,
+    duration: 6.5,
     tag: "Pantalla de Inicio",
     captions: [
       {
         text: "Si una partida ya está en juego, tócala y confirma “Sí, unirme” para agregarte como suplente.",
         from: 0,
-        duration: 5.5,
+        duration: 6.5,
       },
     ],
   },
@@ -55,19 +55,32 @@ export const CLIPS_S: ClipSpecS[] = [
   },
   {
     type: "video",
-    src: "videos/juegos_salir_26s.mp4",
-    duration: 26.4,
+    src: "videos/salir_detalle.mp4",
+    duration: 8.9,
     tag: "Pantalla de Mis Juegos",
     captions: [
       {
         text: "Para salir de una partida, entra al detalle y toca “Salir de la partida”.",
         from: 0,
-        duration: 15,
+        duration: 8.9,
       },
+    ],
+  },
+  {
+    type: "video",
+    src: "videos/salir_lista.mp4",
+    duration: 6.6,
+    tag: "Pantalla de Mis Juegos",
+    captions: [
       {
         text: "También puedes salir directo desde la lista, sin entrar al detalle. Solo dale clic al botón de “Salir de la partida”.",
-        from: 15,
-        duration: 11.4,
+        from: 0,
+        duration: 2.9,
+      },
+      {
+        text: "Listo: saliste de la partida correctamente.",
+        from: 2.9,
+        duration: 3.7,
       },
     ],
   },
