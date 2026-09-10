@@ -9,5 +9,6 @@ export type ClipSpec = {
   src: string;
   duration: number; // seconds
   tag: string; // pill above the description text
+  roleTag?: string; // optional pill top-right, aligned with the brand row
   captions: CaptionSpec[];
 };

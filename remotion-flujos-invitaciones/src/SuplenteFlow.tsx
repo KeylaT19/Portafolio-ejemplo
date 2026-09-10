@@ -10,9 +10,9 @@ import {
   CLIPS_S,
   CLOSING_DURATION_S,
   CLOSING_TITLE_S,
+  CONTEXT_BOX_TEXT_S,
   CONTEXT_DURATION_S,
-  CONTEXT_EMPHASIS_S,
-  CONTEXT_LEAD_S,
+  CONTEXT_TITLE_S,
   MAIN_TITLE_S,
   secS,
   TITLE_DURATION_S,
@@ -43,7 +43,7 @@ export const SuplenteFlow: React.FC = () => {
     <TransitionSeries.Sequence key="context" durationInFrames={secS(CONTEXT_DURATION_S)}>
       <AbsoluteFill>
         <BackgroundH />
-        <ContextCardH lead={CONTEXT_LEAD_S} emphasis={CONTEXT_EMPHASIS_S} />
+        <ContextCardH title={CONTEXT_TITLE_S} boxText={CONTEXT_BOX_TEXT_S} />
       </AbsoluteFill>
     </TransitionSeries.Sequence>,
   );

@@ -2,9 +2,9 @@ import { AbsoluteFill } from "remotion";
 import { LogoH } from "./LogoH";
 import { headingFont } from "../fonts";
 
-export const ContextCardH: React.FC<{ lead: string; emphasis: string }> = ({
-  lead,
-  emphasis,
+export const ContextCardH: React.FC<{ title: string; boxText: string }> = ({
+  title,
+  boxText,
 }) => {
   return (
     <AbsoluteFill
@@ -15,20 +15,20 @@ export const ContextCardH: React.FC<{ lead: string; emphasis: string }> = ({
         padding: "0 220px",
       }}
     >
-      <LogoH size={130} />
+      <LogoH size={150} />
       <div
         style={{
-          marginTop: 32,
-          fontFamily: "Inter, Arial, sans-serif",
-          fontSize: 32,
-          fontWeight: 600,
-          color: "rgba(255,255,255,0.82)",
+          marginTop: 36,
+          fontFamily: `${headingFont}, Arial, sans-serif`,
+          fontSize: 62,
+          fontWeight: 800,
+          color: "#FFFFFF",
           textAlign: "center",
-          lineHeight: 1.45,
-          maxWidth: 1250,
+          lineHeight: 1.2,
+          maxWidth: 1350,
         }}
       >
-        {lead}
+        {title}
       </div>
       <div
         style={{
@@ -41,16 +41,16 @@ export const ContextCardH: React.FC<{ lead: string; emphasis: string }> = ({
       >
         <div
           style={{
-            fontFamily: `${headingFont}, Arial, sans-serif`,
-            fontSize: 51,
-            fontWeight: 800,
-            color: "#FFFFFF",
+            fontFamily: "Inter, Arial, sans-serif",
+            fontSize: 34,
+            fontWeight: 700,
+            color: "rgba(255,255,255,0.92)",
             textAlign: "center",
-            lineHeight: 1.25,
-            maxWidth: 1300,
+            lineHeight: 1.4,
+            maxWidth: 1200,
           }}
         >
-          {emphasis}
+          {boxText}
         </div>
       </div>
     </AbsoluteFill>

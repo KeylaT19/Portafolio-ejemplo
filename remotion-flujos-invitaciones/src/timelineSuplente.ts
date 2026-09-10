@@ -10,19 +10,21 @@ export type ClipSpecS = ClipSpec;
 export const MAIN_TITLE_S = "Qué hacer si falta un jugador en tu partida";
 export const CLOSING_TITLE_S = "Así de fácil se resuelve la falta de un jugador";
 
-// De-emphasized lead-in line (smaller, lighter weight, but still legible).
-export const CONTEXT_LEAD_S =
-  "A veces, al llegar a la cancha para tu reservación, no han llegado todos los jugadores registrados en la partida.";
-// The point to emphasize (in its own highlighted box).
-export const CONTEXT_EMPHASIS_S =
-  "La persona que no podrá asistir puede salir de la partida, dejándola abierta para que cualquier socio se una como suplente.";
+export const CONTEXT_TITLE_S = "¿No llegaron todos a la cancha?";
+export const CONTEXT_BOX_TEXT_S =
+  "Quien no pueda asistir puede abandonar la partida para que el espacio quede libre y otro socio lo ocupe como suplente.";
 
 export const TITLE_DURATION_S = 7;
 export const CONTEXT_DURATION_S = 12;
-export const CLOSING_DURATION_S = 471 / 30;
+export const CLOSING_DURATION_S = 237 / 30;
+
+const ROLE_SALIENTE = "Vista del jugador saliente";
+const ROLE_SUPLENTE = "Vista del jugador suplente";
 
 const SUPLENTE_UNIRSE_CAPTION =
   "Si le falta un jugador, puede tocarla y confirmar “Sí, unirme” para sumarse como suplente.";
+const SALIR_LISTA_RESULT_CAPTION =
+  "Listo: saliste de la partida, y el lugar queda disponible para un suplente.";
 
 export const CLIPS_S: ClipSpecS[] = [
   {
@@ -30,6 +32,7 @@ export const CLIPS_S: ClipSpecS[] = [
     src: "videos/salir_detalle.mp4",
     duration: 8.9,
     tag: "Pantalla de Mis Juegos",
+    roleTag: ROLE_SALIENTE,
     captions: [
       {
         text: "Si no podrás asistir, entra al detalle de tu partida y toca “Salir de la partida” para dejar el lugar disponible.",
@@ -41,18 +44,35 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "video",
     src: "videos/salir_lista.mp4",
-    duration: 6.6,
+    duration: 4.9,
     tag: "Pantalla de Mis Juegos",
+    roleTag: ROLE_SALIENTE,
     captions: [
       {
         text: "También puedes salir directo desde la lista, sin entrar al detalle. Solo dale clic al botón de “Salir de la partida”.",
         from: 0,
-        duration: 2.9,
+        duration: 3.6,
       },
       {
-        text: "Listo: saliste de la partida, y el lugar queda disponible para un suplente.",
-        from: 2.9,
-        duration: 3.7,
+        text: SALIR_LISTA_RESULT_CAPTION,
+        from: 3.6,
+        duration: 1.3,
+      },
+    ],
+  },
+  {
+    // Held frame of "No tienes partidas" so the result has time to read
+    // instead of rushing past it at the tail of the real recording.
+    type: "image",
+    src: "videos/salir_vacio.png",
+    duration: 5,
+    tag: "Pantalla de Mis Juegos",
+    roleTag: ROLE_SALIENTE,
+    captions: [
+      {
+        text: SALIR_LISTA_RESULT_CAPTION,
+        from: 0,
+        duration: 5,
       },
     ],
   },
@@ -61,6 +81,7 @@ export const CLIPS_S: ClipSpecS[] = [
     src: "videos/suplente_inicio.mp4",
     duration: 6.8,
     tag: "Pantalla de Inicio",
+    roleTag: ROLE_SUPLENTE,
     captions: [
       {
         text: "Cualquier socio puede ver esa partida abierta en Inicio, dentro de Reservas del día.",
@@ -74,6 +95,7 @@ export const CLIPS_S: ClipSpecS[] = [
     src: "videos/suplente_enjuego.png",
     duration: 9,
     tag: "Pantalla de Inicio",
+    roleTag: ROLE_SUPLENTE,
     captions: [
       {
         text: "Solo puedes unirte como suplente cuando la partida ya está marcada como “En juego”, dentro de su horario reservado.",
@@ -85,10 +107,13 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     // Held frame of the "Unirse a la partida" confirmation, giving readers
     // time on the dialog before the real recording continues into the tap.
+    // Matches the exact source frame suplente_unirse.mp4 now starts from,
+    // so the crossfade between the two doesn't visibly jump.
     type: "image",
     src: "videos/suplente_modal.png",
     duration: 2,
     tag: "Pantalla de Inicio",
+    roleTag: ROLE_SUPLENTE,
     captions: [
       {
         text: SUPLENTE_UNIRSE_CAPTION,
@@ -100,13 +125,14 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "video",
     src: "videos/suplente_unirse.mp4",
-    duration: 5.2,
+    duration: 4.2,
     tag: "Pantalla de Inicio",
+    roleTag: ROLE_SUPLENTE,
     captions: [
       {
         text: SUPLENTE_UNIRSE_CAPTION,
         from: 0,
-        duration: 5.2,
+        duration: 4.2,
       },
     ],
   },
@@ -115,6 +141,7 @@ export const CLIPS_S: ClipSpecS[] = [
     src: "videos/suplente_exito.png",
     duration: 7.3,
     tag: "Pantalla de Inicio",
+    roleTag: ROLE_SUPLENTE,
     captions: [
       {
         text: "Listo: ya quedó registrado como suplente de esa partida.",
