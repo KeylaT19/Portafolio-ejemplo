@@ -35,7 +35,7 @@ export const CLIPS_S: ClipSpecS[] = [
     roleTag: ROLE_SALIENTE,
     captions: [
       {
-        text: "Si no podrás asistir, entra al detalle de tu partida y toca “Salir de la partida” para dejar el lugar disponible.",
+        text: "¿No podrás asistir?, entra al detalle de tu partida y toca “Salir de la partida” para dejar el lugar disponible.",
         from: 0,
         duration: 8.9,
       },
