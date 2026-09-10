@@ -10,8 +10,8 @@ export type ClipSpecS = ClipSpec;
 export const MAIN_TITLE_S = "Cómo agregarte como suplente y salir de una partida";
 export const CLOSING_TITLE_S = "Así de fácil te unes o sales de una partida";
 
-export const TITLE_DURATION_S = 7;
-export const CLOSING_DURATION_S = 7;
+export const TITLE_DURATION_S = 209 / 30;
+export const CLOSING_DURATION_S = 209 / 30;
 
 export const CLIPS_S: ClipSpecS[] = [
   {
