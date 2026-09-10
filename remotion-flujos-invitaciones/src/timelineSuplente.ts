@@ -11,7 +11,7 @@ export const MAIN_TITLE_S = "Cómo agregarte como suplente y salir de una partid
 export const CLOSING_TITLE_S = "Así de fácil te unes o sales de una partida";
 
 export const TITLE_DURATION_S = 7;
-export const CLOSING_DURATION_S = 456 / 30;
+export const CLOSING_DURATION_S = 426 / 30;
 
 export const CLIPS_S: ClipSpecS[] = [
   {
@@ -30,13 +30,13 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "video",
     src: "videos/suplente_unirse.mp4",
-    duration: 5.5,
+    duration: 6.5,
     tag: "Pantalla de Inicio",
     captions: [
       {
         text: "Si una partida ya está en juego, tócala y confirma “Sí, unirme” para agregarte como suplente.",
         from: 0,
-        duration: 5.5,
+        duration: 6.5,
       },
     ],
   },
