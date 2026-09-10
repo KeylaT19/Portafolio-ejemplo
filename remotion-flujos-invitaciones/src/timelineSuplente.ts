@@ -51,12 +51,12 @@ export const CLIPS_S: ClipSpecS[] = [
       {
         text: "También puedes salir directo desde la lista, sin entrar al detalle. Solo dale clic al botón de “Salir de la partida”.",
         from: 0,
-        duration: 3.6,
+        duration: 4.6,
       },
       {
         text: SALIR_LISTA_RESULT_CAPTION,
-        from: 3.6,
-        duration: 1.3,
+        from: 4.6,
+        duration: 0.3,
       },
     ],
   },
@@ -82,6 +82,7 @@ export const CLIPS_S: ClipSpecS[] = [
     duration: 6.8,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SUPLENTE,
+    roleTagVariant: "sky",
     captions: [
       {
         text: "Cualquier socio puede ver esa partida abierta en Inicio, dentro de Reservas del día.",
@@ -96,6 +97,7 @@ export const CLIPS_S: ClipSpecS[] = [
     duration: 9,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SUPLENTE,
+    roleTagVariant: "sky",
     captions: [
       {
         text: "Solo puedes unirte como suplente cuando la partida ya está marcada como “En juego”, dentro de su horario reservado.",
@@ -114,6 +116,7 @@ export const CLIPS_S: ClipSpecS[] = [
     duration: 2,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SUPLENTE,
+    roleTagVariant: "sky",
     captions: [
       {
         text: SUPLENTE_UNIRSE_CAPTION,
@@ -128,6 +131,7 @@ export const CLIPS_S: ClipSpecS[] = [
     duration: 4.2,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SUPLENTE,
+    roleTagVariant: "sky",
     captions: [
       {
         text: SUPLENTE_UNIRSE_CAPTION,
@@ -142,6 +146,7 @@ export const CLIPS_S: ClipSpecS[] = [
     duration: 7.3,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SUPLENTE,
+    roleTagVariant: "sky",
     captions: [
       {
         text: "Listo: ya quedó registrado como suplente de esa partida.",

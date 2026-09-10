@@ -8,7 +8,7 @@ import { ScreenTag } from "./ScreenTag";
 export const ClipSceneH: React.FC<{ clip: ClipSpec }> = ({ clip }) => {
   return (
     <AbsoluteFill>
-      <HeaderH roleTag={clip.roleTag} />
+      <HeaderH roleTag={clip.roleTag} roleTagVariant={clip.roleTagVariant} />
       <div
         style={{
           position: "absolute",
