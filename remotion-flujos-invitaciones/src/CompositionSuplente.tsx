@@ -3,6 +3,7 @@ import { SuplenteFlow } from "./SuplenteFlow";
 import {
   CLIPS_S,
   CLOSING_DURATION_S,
+  CONTEXT_DURATION_S,
   FPS_S,
   secS,
   TITLE_DURATION_S,
@@ -10,9 +11,10 @@ import {
 } from "./timelineSuplente";
 
 const totalDurationFrames = () => {
-  const scenes = 1 /* title */ + CLIPS_S.length + 1 /* closing */;
+  const scenes = 1 /* title */ + 1 /* context */ + CLIPS_S.length + 1 /* closing */;
   const sceneFrames =
     secS(TITLE_DURATION_S) +
+    secS(CONTEXT_DURATION_S) +
     CLIPS_S.reduce((acc, clip) => acc + secS(clip.duration), 0) +
     secS(CLOSING_DURATION_S);
 
