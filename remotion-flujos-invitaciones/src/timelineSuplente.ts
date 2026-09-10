@@ -13,13 +13,16 @@ export const CLOSING_TITLE_S = "Así de fácil se resuelve la falta de un jugado
 // De-emphasized lead-in line (smaller, lighter weight, but still legible).
 export const CONTEXT_LEAD_S =
   "A veces, al llegar a la cancha para tu reservación, no han llegado todos los jugadores registrados en la partida.";
-// The point to emphasize (bigger, bold).
+// The point to emphasize (in its own highlighted box).
 export const CONTEXT_EMPHASIS_S =
   "La persona que no podrá asistir puede salir de la partida, dejándola abierta para que cualquier socio se una como suplente.";
 
 export const TITLE_DURATION_S = 7;
 export const CONTEXT_DURATION_S = 12;
-export const CLOSING_DURATION_S = 201 / 30;
+export const CLOSING_DURATION_S = 471 / 30;
+
+const SUPLENTE_UNIRSE_CAPTION =
+  "Si le falta un jugador, puede tocarla y confirmar “Sí, unirme” para sumarse como suplente.";
 
 export const CLIPS_S: ClipSpecS[] = [
   {
@@ -69,13 +72,28 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "image",
     src: "videos/suplente_enjuego.png",
-    duration: 5,
+    duration: 9,
     tag: "Pantalla de Inicio",
     captions: [
       {
         text: "Solo puedes unirte como suplente cuando la partida ya está marcada como “En juego”, dentro de su horario reservado.",
         from: 0,
-        duration: 5,
+        duration: 9,
+      },
+    ],
+  },
+  {
+    // Held frame of the "Unirse a la partida" confirmation, giving readers
+    // time on the dialog before the real recording continues into the tap.
+    type: "image",
+    src: "videos/suplente_modal.png",
+    duration: 2,
+    tag: "Pantalla de Inicio",
+    captions: [
+      {
+        text: SUPLENTE_UNIRSE_CAPTION,
+        from: 0,
+        duration: 2,
       },
     ],
   },
@@ -86,7 +104,7 @@ export const CLIPS_S: ClipSpecS[] = [
     tag: "Pantalla de Inicio",
     captions: [
       {
-        text: "Si le falta un jugador, puede tocarla y confirmar “Sí, unirme” para sumarse como suplente.",
+        text: SUPLENTE_UNIRSE_CAPTION,
         from: 0,
         duration: 5.2,
       },

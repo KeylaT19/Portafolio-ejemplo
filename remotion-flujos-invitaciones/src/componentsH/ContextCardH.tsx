@@ -32,17 +32,26 @@ export const ContextCardH: React.FC<{ lead: string; emphasis: string }> = ({
       </div>
       <div
         style={{
-          marginTop: 30,
-          fontFamily: `${headingFont}, Arial, sans-serif`,
-          fontSize: 54,
-          fontWeight: 800,
-          color: "#FFFFFF",
-          textAlign: "center",
-          lineHeight: 1.25,
-          maxWidth: 1350,
+          marginTop: 34,
+          padding: "28px 44px",
+          borderRadius: 24,
+          background: "rgba(255,255,255,0.08)",
+          border: "1px solid rgba(255,255,255,0.16)",
         }}
       >
-        {emphasis}
+        <div
+          style={{
+            fontFamily: `${headingFont}, Arial, sans-serif`,
+            fontSize: 51,
+            fontWeight: 800,
+            color: "#FFFFFF",
+            textAlign: "center",
+            lineHeight: 1.25,
+            maxWidth: 1300,
+          }}
+        >
+          {emphasis}
+        </div>
       </div>
     </AbsoluteFill>
   );
