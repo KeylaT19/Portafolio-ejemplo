@@ -22,7 +22,7 @@ const ROLE_SALIENTE = "Vista del jugador saliente";
 const ROLE_SUPLENTE = "Vista del jugador suplente";
 
 const SUPLENTE_UNIRSE_CAPTION =
-  "Si le falta un jugador, puede tocarla y confirmar “Sí, unirme” para sumarse como suplente.";
+  "Si le falta un jugador, puedes tocarla y confirmar “Sí, unirme” para sumarse como suplente.";
 const SALIR_LISTA_RESULT_CAPTION =
   "Listo: saliste de la partida, y el lugar queda disponible para un suplente.";
 
@@ -35,7 +35,7 @@ export const CLIPS_S: ClipSpecS[] = [
     roleTag: ROLE_SALIENTE,
     captions: [
       {
-        text: "¿No podrás asistir?, entra al detalle de tu partida y toca “Salir de la partida” para dejar el lugar disponible.",
+        text: "¿No podrás asistir? Entra al detalle de tu partida y toca “Salir de la partida” para dejar el lugar disponible.",
         from: 0,
         duration: 8.9,
       },
