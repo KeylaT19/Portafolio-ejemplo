@@ -10,13 +10,15 @@ export type ClipSpecS = ClipSpec;
 export const MAIN_TITLE_S = "Qué hacer si falta un jugador en tu partida";
 export const CLOSING_TITLE_S = "Así de fácil se resuelve la falta de un jugador";
 
-export const CONTEXT_TITLE_S =
-  "A veces, al llegar a la cancha, no se completan todos los jugadores.";
-export const CONTEXT_SUBTITLE_S =
+// De-emphasized lead-in line (smaller, lighter weight, but still legible).
+export const CONTEXT_LEAD_S =
+  "A veces, al llegar a la cancha para tu reservación, no han llegado todos los jugadores registrados en la partida.";
+// The point to emphasize (bigger, bold).
+export const CONTEXT_EMPHASIS_S =
   "La persona que no podrá asistir puede salir de la partida, dejándola abierta para que cualquier socio se una como suplente.";
 
 export const TITLE_DURATION_S = 7;
-export const CONTEXT_DURATION_S = 8;
+export const CONTEXT_DURATION_S = 12;
 export const CLOSING_DURATION_S = 201 / 30;
 
 export const CLIPS_S: ClipSpecS[] = [
@@ -61,6 +63,19 @@ export const CLIPS_S: ClipSpecS[] = [
         text: "Cualquier socio puede ver esa partida abierta en Inicio, dentro de Reservas del día.",
         from: 0,
         duration: 6.8,
+      },
+    ],
+  },
+  {
+    type: "image",
+    src: "videos/suplente_enjuego.png",
+    duration: 5,
+    tag: "Pantalla de Inicio",
+    captions: [
+      {
+        text: "Solo puedes unirte como suplente cuando la partida ya está marcada como “En juego”, dentro de su horario reservado.",
+        from: 0,
+        duration: 5,
       },
     ],
   },

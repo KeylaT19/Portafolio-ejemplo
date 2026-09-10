@@ -4,14 +4,15 @@ import { fade } from "@remotion/transitions/fade";
 import { BackgroundH } from "./componentsH/BackgroundH";
 import { TitleCardH } from "./componentsH/TitleCardH";
 import { ClosingCardH } from "./componentsH/ClosingCardH";
+import { ContextCardH } from "./componentsH/ContextCardH";
 import { ClipSceneH } from "./componentsH/ClipSceneH";
 import {
   CLIPS_S,
   CLOSING_DURATION_S,
   CLOSING_TITLE_S,
   CONTEXT_DURATION_S,
-  CONTEXT_SUBTITLE_S,
-  CONTEXT_TITLE_S,
+  CONTEXT_EMPHASIS_S,
+  CONTEXT_LEAD_S,
   MAIN_TITLE_S,
   secS,
   TITLE_DURATION_S,
@@ -42,7 +43,7 @@ export const SuplenteFlow: React.FC = () => {
     <TransitionSeries.Sequence key="context" durationInFrames={secS(CONTEXT_DURATION_S)}>
       <AbsoluteFill>
         <BackgroundH />
-        <TitleCardH title={CONTEXT_TITLE_S} subtitle={CONTEXT_SUBTITLE_S} logoSize={150} />
+        <ContextCardH lead={CONTEXT_LEAD_S} emphasis={CONTEXT_EMPHASIS_S} />
       </AbsoluteFill>
     </TransitionSeries.Sequence>,
   );
