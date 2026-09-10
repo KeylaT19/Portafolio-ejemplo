@@ -8,7 +8,7 @@ export const TRANSITION_FRAMES_S = 15; // 0.5s crossfade between every scene
 export type ClipSpecS = ClipSpec;
 
 export const MAIN_TITLE_S = "Qué hacer si falta un jugador en tu partida";
-export const CLOSING_TITLE_S = "Así de fácil se resuelve la falta de un jugador";
+export const CLOSING_TITLE_S = "¡Así de fácil mantienes tu equipo completo!";
 
 export const CONTEXT_TITLE_S = "¿No llegaron todos a la cancha?";
 export const CONTEXT_BOX_TEXT_S =
@@ -16,7 +16,7 @@ export const CONTEXT_BOX_TEXT_S =
 
 export const TITLE_DURATION_S = 7;
 export const CONTEXT_DURATION_S = 12;
-export const CLOSING_DURATION_S = 237 / 30;
+export const CLOSING_DURATION_S = 303 / 30;
 
 const ROLE_SALIENTE = "Vista del jugador saliente";
 const ROLE_SUPLENTE = "Vista del jugador suplente";
@@ -128,7 +128,7 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "video",
     src: "videos/suplente_unirse.mp4",
-    duration: 4.2,
+    duration: 2,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SUPLENTE,
     roleTagVariant: "sky",
@@ -136,7 +136,7 @@ export const CLIPS_S: ClipSpecS[] = [
       {
         text: SUPLENTE_UNIRSE_CAPTION,
         from: 0,
-        duration: 4.2,
+        duration: 2,
       },
     ],
   },
