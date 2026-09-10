@@ -1,27 +1,17 @@
+import { ClipSpec } from "./captionTypes";
+
 export const FPS_S = 30;
 export const secS = (s: number) => Math.round(s * FPS_S);
 
 export const TRANSITION_FRAMES_S = 15; // 0.5s crossfade between every scene
 
-export type CaptionSpec = {
-  text: string;
-  from: number; // seconds, relative to clip start
-  duration: number; // seconds
-};
+export type ClipSpecS = ClipSpec;
 
-export type ClipSpecS = {
-  type: "video" | "image";
-  src: string;
-  duration: number; // seconds
-  tag: string; // pill above the description text
-  captions: CaptionSpec[];
-};
+export const MAIN_TITLE_S = "Cómo agregarte como suplente y salir de una partida";
+export const CLOSING_TITLE_S = "Así de fácil te unes o sales de una partida";
 
-export const MAIN_TITLE_S = "Cómo agregarte como suplente en una partida";
-export const CLOSING_TITLE_S = "Así de fácil te unes como suplente a una partida";
-
-export const TITLE_DURATION_S = 9;
-export const CLOSING_DURATION_S = 9.7;
+export const TITLE_DURATION_S = 7;
+export const CLOSING_DURATION_S = 7;
 
 export const CLIPS_S: ClipSpecS[] = [
   {
@@ -53,13 +43,31 @@ export const CLIPS_S: ClipSpecS[] = [
   {
     type: "image",
     src: "videos/suplente_exito.png",
-    duration: 13,
+    duration: 6,
     tag: "Pantalla de Inicio",
     captions: [
       {
         text: "Listo: ya quedaste registrado como suplente de esa partida.",
         from: 0,
-        duration: 13,
+        duration: 6,
+      },
+    ],
+  },
+  {
+    type: "video",
+    src: "videos/juegos_salir_26s.mp4",
+    duration: 26.4,
+    tag: "Pantalla de Mis Juegos",
+    captions: [
+      {
+        text: "Para salir de una partida, entra al detalle y toca “Salir de la partida”.",
+        from: 0,
+        duration: 15,
+      },
+      {
+        text: "También puedes salir directo desde la lista, sin entrar al detalle. Solo dale clic al botón de “Salir de la partida”.",
+        from: 15,
+        duration: 11.4,
       },
     ],
   },
