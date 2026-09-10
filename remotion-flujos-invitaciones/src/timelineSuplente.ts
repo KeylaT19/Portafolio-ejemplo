@@ -16,7 +16,7 @@ export const CONTEXT_BOX_TEXT_S =
 
 export const TITLE_DURATION_S = 7;
 export const CONTEXT_DURATION_S = 12;
-export const CLOSING_DURATION_S = 303 / 30;
+export const CLOSING_DURATION_S = 213 / 30;
 
 const ROLE_SALIENTE = "Vista del jugador saliente";
 const ROLE_SUPLENTE = "Vista del jugador suplente";
@@ -113,7 +113,7 @@ export const CLIPS_S: ClipSpecS[] = [
     // so the crossfade between the two doesn't visibly jump.
     type: "image",
     src: "videos/suplente_modal.png",
-    duration: 2,
+    duration: 5,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SUPLENTE,
     roleTagVariant: "sky",
@@ -121,7 +121,7 @@ export const CLIPS_S: ClipSpecS[] = [
       {
         text: SUPLENTE_UNIRSE_CAPTION,
         from: 0,
-        duration: 2,
+        duration: 5,
       },
     ],
   },
