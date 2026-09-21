@@ -24,6 +24,7 @@ export const ClipSceneH: React.FC<{ clip: ClipSpec }> = ({ clip }) => {
           src={clip.src}
           screenWidth={360}
           cropTop={clip.phoneCropTop}
+          highlights={clip.highlights}
         />
       </div>
       <div

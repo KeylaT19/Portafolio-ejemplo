@@ -31,6 +31,7 @@ export const CLIPS_SR: ClipSpecSR[] = [
     duration: 7.0,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_PRIMERO,
+    highlights: [{ xPct: 72, yPct: 53, from: 0.6, duration: 1.8 }],
     captions: [
       {
         text: "Cuando una cancha está libre dentro de su horario, verás la etiqueta “Juega sin Reserva”.",
@@ -48,6 +49,10 @@ export const CLIPS_SR: ClipSpecSR[] = [
     duration: 15.0,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_PRIMERO,
+    highlights: [
+      { xPct: 27, yPct: 58, from: 0, duration: 1.0 },
+      { xPct: 50, yPct: 55, from: 4.2, duration: 1.0 },
+    ],
     captions: [
       {
         text: "Dale clic en “Puesto libre” y, en el modal, confirma “Sí, tomar la cancha”. No se gasta ninguna de tus reservaciones.",
@@ -102,6 +107,10 @@ export const CLIPS_SR: ClipSpecSR[] = [
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SEGUNDO,
     roleTagVariant: "sky",
+    highlights: [
+      { xPct: 50, yPct: 53, from: 0.7, duration: 1.0 },
+      { xPct: 50, yPct: 53, from: 3.5, duration: 1.0 },
+    ],
     captions: [
       {
         text: "Cualquier otro socio puede ver esa misma cancha activa y sumarse.",

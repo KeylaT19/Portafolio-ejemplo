@@ -1,4 +1,6 @@
 import { Img, OffthreadVideo, staticFile } from "remotion";
+import { HighlightSpec } from "../captionTypes";
+import { TapPulses } from "./TapPulse";
 
 // Native capture resolution of the source screen recordings.
 const NATIVE_W = 572;
@@ -23,7 +25,8 @@ export const PhoneMock: React.FC<{
   // the top crop for that one clip keeps CROP_H (and so the phone's size)
   // identical across every scene.
   cropTop?: number;
-}> = ({ type, src, screenWidth = 360, cropTop = CROP_TOP }) => {
+  highlights?: HighlightSpec[];
+}> = ({ type, src, screenWidth = 360, cropTop = CROP_TOP, highlights }) => {
   const screenHeight = (CROP_H / NATIVE_W) * screenWidth;
   const frameWidth = screenWidth + BEZEL_SIDE * 2;
   const frameHeight = screenHeight + BEZEL_TOP + BEZEL_BOTTOM;
@@ -78,6 +81,8 @@ export const PhoneMock: React.FC<{
             />
           )}
         </div>
+
+        <TapPulses highlights={highlights} />
       </div>
 
       {/* Notch */}
