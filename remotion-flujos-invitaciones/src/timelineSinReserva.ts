@@ -109,7 +109,7 @@ export const CLIPS_SR: ClipSpecSR[] = [
         duration: 5.5,
       },
       {
-        text: "Se necesitan mínimo 2 jugadores para activarla, y puede llegar hasta 6.",
+        text: "Para estas ocasiones se necesitan mínimo 2 jugadores para poder utilizar la cancha, y se puede llegar hasta 6.",
         from: 5.5,
         duration: 6.2,
       },
