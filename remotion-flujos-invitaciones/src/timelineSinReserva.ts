@@ -31,9 +31,6 @@ export const CLIPS_SR: ClipSpecSR[] = [
     duration: 7.0,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_PRIMERO,
-    highlights: [
-      { type: "arrow", xPct: 68, yPct: 51, from: 0.6, duration: 2.2, angleDeg: 135, length: 65 },
-    ],
     captions: [
       {
         text: "Cuando una cancha está libre dentro de su horario, verás la etiqueta “Juega sin Reserva”.",

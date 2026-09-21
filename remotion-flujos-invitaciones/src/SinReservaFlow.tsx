@@ -54,7 +54,7 @@ export const SinReservaFlow: React.FC = () => {
       <TransitionSeries.Sequence key={`clip-${i}`} durationInFrames={secSR(clip.duration)}>
         <AbsoluteFill>
           <BackgroundH />
-          <ClipSceneH clip={clip} />
+          <ClipSceneH clip={clip} phoneScreenWidth={467} phoneLeft={90} phoneTop={115} />
         </AbsoluteFill>
       </TransitionSeries.Sequence>,
     );
