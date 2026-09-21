@@ -23,8 +23,11 @@ const ROLE_SEGUNDO = "Vista del segundo jugador";
 
 export const CLIPS_SR: ClipSpecSR[] = [
   {
-    type: "video",
-    src: "videos/sinreserva_lista1.mp4",
+    // Held still frame so the screen stays completely fixed for the whole
+    // time this caption is on screen, instead of the source recording's
+    // own motion during that window.
+    type: "image",
+    src: "videos/sinreserva_lista1_still.png",
     duration: 5.0,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_PRIMERO,
