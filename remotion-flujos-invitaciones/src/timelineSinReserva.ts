@@ -7,16 +7,16 @@ export const TRANSITION_FRAMES_SR = 15; // 0.5s crossfade between every scene
 
 export type ClipSpecSR = ClipSpec;
 
-export const MAIN_TITLE_SR = "¿Cómo jugar en una cancha libre sin reservar?";
+export const MAIN_TITLE_SR = "¿Cómo jugar en una cancha sin reservas?";
 export const CLOSING_TITLE_SR = "¡Así de fácil aprovechas una cancha libre!";
 
-export const CONTEXT_TITLE_SR = "¿Hay una cancha disponible en tu horario?";
+export const CONTEXT_TITLE_SR = "¿Hay una cancha disponible en tu horario actual?";
 export const CONTEXT_BOX_TEXT_SR =
   "Puedes unirte a jugar sin reservar y sin gastar ninguna de tus reservaciones. Cada socio solo puede tomar una cancha libre por horario.";
 
 export const TITLE_DURATION_SR = 7;
 export const CONTEXT_DURATION_SR = 11;
-export const CLOSING_DURATION_SR = 11.8;
+export const CLOSING_DURATION_SR = 9.8;
 
 const ROLE_PRIMERO = "Vista del primer jugador";
 const ROLE_SEGUNDO = "Vista del segundo jugador";
@@ -45,18 +45,18 @@ export const CLIPS_SR: ClipSpecSR[] = [
     // with the court already marked "En juego".
     type: "video",
     src: "videos/sinreserva_tomar.mp4",
-    duration: 13.0,
+    duration: 15.0,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_PRIMERO,
     captions: [
       {
-        text: "Tócala y confirma “Sí, tomar la cancha”. No se gasta ninguna de tus reservaciones.",
+        text: "Dale clic en “Puesto libre” y, en el modal, confirma “Sí, tomar la cancha”. No se gasta ninguna de tus reservaciones.",
         from: 0,
-        duration: 6.6,
+        duration: 8.6,
       },
       {
         text: "Listo: la cancha queda “En juego”, y otros socios todavía pueden sumarse.",
-        from: 6.6,
+        from: 8.6,
         duration: 6.4,
       },
     ],
