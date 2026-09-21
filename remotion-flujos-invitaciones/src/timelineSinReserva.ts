@@ -15,7 +15,7 @@ export const CONTEXT_BOX_TEXT_SR =
   "Puedes unirte a jugar sin reservar y sin gastar ninguna de tus reservaciones. Cada socio solo puede tomar una cancha libre por horario.";
 
 export const TITLE_DURATION_SR = 9;
-export const CONTEXT_DURATION_SR = 15;
+export const CONTEXT_DURATION_SR = 13;
 export const CLOSING_DURATION_SR = 9;
 
 const ROLE_PRIMERO = "Vista del primer jugador";
@@ -62,30 +62,32 @@ export const CLIPS_SR: ClipSpecSR[] = [
     ],
   },
   {
-    type: "video",
-    src: "videos/sinreserva_misjuegos1.mp4",
-    duration: 4.0,
+    // Held still frame so this screen stays paused for the whole caption
+    // instead of drifting with the source recording.
+    type: "image",
+    src: "videos/sinreserva_misjuegos1_still.png",
+    duration: 6.0,
     tag: "Pantalla de Mis Juegos",
     roleTag: ROLE_PRIMERO,
     captions: [
       {
         text: "También puedes verla en Mis Juegos, con el número de jugadores confirmados.",
         from: 0,
-        duration: 4.0,
+        duration: 6.0,
       },
     ],
   },
   {
     type: "video",
     src: "videos/sinreserva_detalle1.mp4",
-    duration: 4.5,
+    duration: 6.5,
     tag: "Pantalla de Mis Juegos",
     roleTag: ROLE_PRIMERO,
     captions: [
       {
         text: "Desde el detalle puedes ver a los jugadores agregados o salir de la partida.",
         from: 0,
-        duration: 4.5,
+        duration: 6.5,
       },
     ],
   },
@@ -116,21 +118,28 @@ export const CLIPS_SR: ClipSpecSR[] = [
     roleTagVariant: "sky",
     captions: [
       {
-        text: "Toca la cancha y confirma “Sí, unirme” para sumarte a la partida.",
+        // Continues the previous screen's caption instead of introducing
+        // the tap instruction, so the same message reads through the
+        // whole modal-to-tap sequence.
+        text: "Cualquier otro socio puede ver esa misma cancha activa y sumarse.",
         from: 0,
-        duration: 5.3,
+        duration: 3.5,
       },
       {
         text: "Se necesitan mínimo 2 jugadores para activarla, y puede llegar hasta 6.",
-        from: 5.3,
-        duration: 6.2,
+        from: 3.5,
+        duration: 8.0,
       },
     ],
   },
   {
-    type: "video",
-    src: "videos/sinreserva_misjuegos2.mp4",
-    duration: 4.0,
+    // No clean recording of this player's own "Detalle de la partida" is
+    // available (the source footage has an onscreen browser toolbar that
+    // can't be cropped out), so this closing screen is held paused instead,
+    // with extra time on its caption.
+    type: "image",
+    src: "videos/sinreserva_misjuegos2_still.png",
+    duration: 6.5,
     tag: "Pantalla de Mis Juegos",
     roleTag: ROLE_SEGUNDO,
     roleTagVariant: "sky",
@@ -138,7 +147,7 @@ export const CLIPS_SR: ClipSpecSR[] = [
       {
         text: "En Mis Juegos puedes ver cuántos jugadores faltan o ya se han sumado.",
         from: 0,
-        duration: 4.0,
+        duration: 6.5,
       },
     ],
   },
