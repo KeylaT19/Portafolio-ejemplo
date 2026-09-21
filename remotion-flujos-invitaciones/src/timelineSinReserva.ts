@@ -14,9 +14,9 @@ export const CONTEXT_TITLE_SR = "¿Hay una cancha disponible en tu horario?";
 export const CONTEXT_BOX_TEXT_SR =
   "Puedes unirte a jugar sin reservar y sin gastar ninguna de tus reservaciones. Cada socio solo puede tomar una cancha libre por horario.";
 
-export const TITLE_DURATION_SR = 9;
-export const CONTEXT_DURATION_SR = 13;
-export const CLOSING_DURATION_SR = 9;
+export const TITLE_DURATION_SR = 7;
+export const CONTEXT_DURATION_SR = 11;
+export const CLOSING_DURATION_SR = 11.8;
 
 const ROLE_PRIMERO = "Vista del primer jugador";
 const ROLE_SEGUNDO = "Vista del segundo jugador";
@@ -28,14 +28,14 @@ export const CLIPS_SR: ClipSpecSR[] = [
     // own motion during that window.
     type: "image",
     src: "videos/sinreserva_lista1_still.png",
-    duration: 5.0,
+    duration: 7.0,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_PRIMERO,
     captions: [
       {
         text: "Cuando una cancha está libre dentro de su horario, verás la etiqueta “Juega sin Reserva”.",
         from: 0,
-        duration: 5.0,
+        duration: 7.0,
       },
     ],
   },
@@ -92,62 +92,46 @@ export const CLIPS_SR: ClipSpecSR[] = [
     ],
   },
   {
-    type: "video",
-    src: "videos/sinreserva_lista2.mp4",
-    duration: 3.0,
-    tag: "Pantalla de Inicio",
-    roleTag: ROLE_SEGUNDO,
-    roleTagVariant: "sky",
-    captions: [
-      {
-        text: "Cualquier otro socio puede ver esa misma cancha activa y sumarse.",
-        from: 0,
-        duration: 3.0,
-      },
-    ],
-  },
-  {
-    // Same continuous-recording approach as sinreserva_tomar, but from the
-    // second player's device: modal, tap, success, and the list settling
-    // back with both players now shown.
+    // One fluid recording: the list showing the court already active,
+    // straight through the "Unirme a la partida" modal, the tap, and the
+    // success screen settling on the list with both players. No cut
+    // between "sees the active court" and the join itself.
     type: "video",
     src: "videos/sinreserva_unirse.mp4",
-    duration: 11.5,
+    duration: 11.7,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_SEGUNDO,
     roleTagVariant: "sky",
     captions: [
       {
-        // Continues the previous screen's caption instead of introducing
-        // the tap instruction, so the same message reads through the
-        // whole modal-to-tap sequence.
         text: "Cualquier otro socio puede ver esa misma cancha activa y sumarse.",
         from: 0,
-        duration: 3.5,
+        duration: 5.5,
       },
       {
         text: "Se necesitan mínimo 2 jugadores para activarla, y puede llegar hasta 6.",
-        from: 3.5,
-        duration: 8.0,
+        from: 5.5,
+        duration: 6.2,
       },
     ],
   },
   {
-    // No clean recording of this player's own "Detalle de la partida" is
-    // available (the source footage has an onscreen browser toolbar that
-    // can't be cropped out), so this closing screen is held paused instead,
-    // with extra time on its caption.
-    type: "image",
-    src: "videos/sinreserva_misjuegos2_still.png",
-    duration: 6.5,
+    // This player's own "Mis Juegos" screen, scrolling into "Detalle de la
+    // partida". The source clip briefly shows the browser's address bar,
+    // which sits lower than the usual status bar, so this one clip needs a
+    // taller top crop than the rest.
+    type: "video",
+    src: "videos/sinreserva_detalle2.mp4",
+    duration: 6.0,
     tag: "Pantalla de Mis Juegos",
     roleTag: ROLE_SEGUNDO,
     roleTagVariant: "sky",
+    phoneCropTop: 150,
     captions: [
       {
-        text: "En Mis Juegos puedes ver cuántos jugadores faltan o ya se han sumado.",
+        text: "En Mis Juegos puedes ver cuántos jugadores ya se han sumado.",
         from: 0,
-        duration: 6.5,
+        duration: 6.0,
       },
     ],
   },

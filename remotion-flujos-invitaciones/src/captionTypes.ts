@@ -11,5 +11,6 @@ export type ClipSpec = {
   tag: string; // pill above the description text
   roleTag?: string; // optional pill top-right, aligned with the brand row
   roleTagVariant?: "amber" | "sky"; // color scheme for the roleTag pill
+  phoneCropTop?: number; // override PhoneMock's default top crop for this clip
   captions: CaptionSpec[];
 };

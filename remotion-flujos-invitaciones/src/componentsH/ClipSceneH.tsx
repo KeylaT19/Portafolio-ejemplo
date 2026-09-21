@@ -19,7 +19,12 @@ export const ClipSceneH: React.FC<{ clip: ClipSpec }> = ({ clip }) => {
           alignItems: "center",
         }}
       >
-        <PhoneMock type={clip.type} src={clip.src} screenWidth={360} />
+        <PhoneMock
+          type={clip.type}
+          src={clip.src}
+          screenWidth={360}
+          cropTop={clip.phoneCropTop}
+        />
       </div>
       <div
         style={{

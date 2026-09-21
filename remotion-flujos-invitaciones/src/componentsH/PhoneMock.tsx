@@ -18,14 +18,19 @@ export const PhoneMock: React.FC<{
   type: "video" | "image";
   src: string;
   screenWidth?: number;
-}> = ({ type, src, screenWidth = 360 }) => {
+  // Some recordings briefly show more browser chrome than the standard
+  // CROP_TOP hides (e.g. the address bar stayed pinned). Overriding just
+  // the top crop for that one clip keeps CROP_H (and so the phone's size)
+  // identical across every scene.
+  cropTop?: number;
+}> = ({ type, src, screenWidth = 360, cropTop = CROP_TOP }) => {
   const screenHeight = (CROP_H / NATIVE_W) * screenWidth;
   const frameWidth = screenWidth + BEZEL_SIDE * 2;
   const frameHeight = screenHeight + BEZEL_TOP + BEZEL_BOTTOM;
 
   const contentScale = screenWidth / NATIVE_W;
   const contentHeight = NATIVE_H * contentScale;
-  const contentTopOffset = -CROP_TOP * contentScale;
+  const contentTopOffset = -cropTop * contentScale;
 
   return (
     <div
