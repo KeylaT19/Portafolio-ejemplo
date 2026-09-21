@@ -5,10 +5,13 @@ export type CaptionSpec = {
 };
 
 export type HighlightSpec = {
+  type?: "pulse" | "arrow"; // "pulse" (default): tap flash. "arrow": points at a static element.
   xPct: number; // 0-100, horizontal position within the visible (cropped) screen
   yPct: number; // 0-100, vertical position within the visible (cropped) screen
   from: number; // seconds, relative to clip start
   duration: number; // seconds
+  angleDeg?: number; // arrow only: direction the arrow's tail extends from the tip
+  length?: number; // arrow only: shaft length in px (at native 360-wide phone scale)
 };
 
 export type ClipSpec = {

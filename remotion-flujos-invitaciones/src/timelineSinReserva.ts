@@ -31,7 +31,9 @@ export const CLIPS_SR: ClipSpecSR[] = [
     duration: 7.0,
     tag: "Pantalla de Inicio",
     roleTag: ROLE_PRIMERO,
-    highlights: [{ xPct: 72, yPct: 53, from: 0.6, duration: 1.8 }],
+    highlights: [
+      { type: "arrow", xPct: 68, yPct: 51, from: 0.6, duration: 2.2, angleDeg: 135, length: 65 },
+    ],
     captions: [
       {
         text: "Cuando una cancha está libre dentro de su horario, verás la etiqueta “Juega sin Reserva”.",
@@ -74,6 +76,7 @@ export const CLIPS_SR: ClipSpecSR[] = [
     duration: 6.0,
     tag: "Pantalla de Mis Juegos",
     roleTag: ROLE_PRIMERO,
+    highlights: [{ xPct: 58, yPct: 73, from: 2.5, duration: 1.2 }],
     captions: [
       {
         text: "También puedes verla en Mis Juegos, con el número de jugadores confirmados.",
@@ -136,6 +139,7 @@ export const CLIPS_SR: ClipSpecSR[] = [
     roleTag: ROLE_SEGUNDO,
     roleTagVariant: "sky",
     phoneCropTop: 150,
+    highlights: [{ xPct: 58, yPct: 77, from: 0.4, duration: 1.0 }],
     captions: [
       {
         text: "En Mis Juegos puedes ver cuántos jugadores ya se han sumado.",
