@@ -51,8 +51,8 @@ export const ClipSceneH: React.FC<{
           justifyContent: "center",
         }}
       >
-        <ScreenTag label={clip.tag} />
-        <TextPanel captions={clip.captions} />
+        {clip.tag ? <ScreenTag label={clip.tag} /> : null}
+        {clip.captions.length > 0 ? <TextPanel captions={clip.captions} /> : null}
       </div>
     </AbsoluteFill>
   );
