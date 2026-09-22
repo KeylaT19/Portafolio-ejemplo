@@ -33,7 +33,7 @@ export const CLIPS_SR: ClipSpecSR[] = [
     roleTag: ROLE_PRIMERO,
     captions: [
       {
-        text: "Cuando una cancha está libre dentro de su horario, verás la etiqueta “Juega sin Reserva”.",
+        text: "Cuando una cancha está libre dentro de su horario, verás la etiqueta “Juega sin Reservación”.",
         from: 0,
         duration: 7.0,
       },
