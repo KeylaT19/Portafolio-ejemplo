@@ -140,7 +140,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
       {
         text: "Cada jugador puede ver el detalle de la partida antes de unirse.",
         from: 0,
-        duration: 4.4,
+        duration: 5.4,
       },
       {
         text: WARNING_CAPTION,
