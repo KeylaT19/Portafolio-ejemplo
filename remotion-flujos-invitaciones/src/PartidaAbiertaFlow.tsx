@@ -1,4 +1,4 @@
-import { AbsoluteFill } from "remotion";
+import { AbsoluteFill, Audio, staticFile } from "remotion";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { BackgroundH } from "./componentsH/BackgroundH";
@@ -60,6 +60,7 @@ export const PartidaAbiertaFlow: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ background: "#0B0F35" }}>
+      <Audio src={staticFile("videos/sinreserva_audio.m4a")} />
       <TransitionSeries>{items}</TransitionSeries>
     </AbsoluteFill>
   );
