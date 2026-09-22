@@ -7,7 +7,7 @@ export const TRANSITION_FRAMES_SR = 15; // 0.5s crossfade between every scene
 
 export type ClipSpecSR = ClipSpec;
 
-export const MAIN_TITLE_SR = "¿Cómo jugar en una cancha sin reservas?";
+export const MAIN_TITLE_SR = "¿Cómo jugar en una cancha sin reservaciones?";
 export const CLOSING_TITLE_SR = "¡Así de fácil aprovechas una cancha libre!";
 
 export const CONTEXT_TITLE_SR = "¿Hay una cancha disponible en tu horario actual?";
