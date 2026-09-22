@@ -11,7 +11,7 @@ export const MAIN_TITLE_PA = "¿Cómo reservar una partida abierta?";
 export const CLOSING_TITLE_PA = "¡Así se arma una partida abierta entre todos!";
 
 export const TITLE_DURATION_PA = 7;
-export const CLOSING_DURATION_PA = 10.2;
+export const CLOSING_DURATION_PA = 11.3;
 
 const ROLE_ORGANIZADOR = "Vista del organizador";
 const ROLE_INVITADO = "Vista del invitado";
@@ -54,20 +54,20 @@ export const CLIPS_PA: ClipSpecPA[] = [
   {
     type: "video",
     src: "videos/abierta_primer_jugador.mp4",
-    duration: 10.0,
+    duration: 12.0,
     tag: "ERES EL PRIMER JUGADOR",
     roleTag: ROLE_ORGANIZADOR,
-    highlights: [{ xPct: 50, yPct: 79, from: 6.6, duration: 0.7 }],
+    highlights: [{ xPct: 50, yPct: 79, from: 7.7, duration: 0.6 }],
     captions: [
       {
         text: "Al ser el primer jugador, el sistema avisa a los demás socios que esta partida abierta ya está disponible para unirse.",
         from: 0,
-        duration: 4.0,
+        duration: 8.0,
       },
       {
         text: WARNING_CAPTION,
-        from: 4.0,
-        duration: 6.0,
+        from: 8.0,
+        duration: 4.0,
       },
     ],
   },
@@ -128,21 +128,21 @@ export const CLIPS_PA: ClipSpecPA[] = [
   {
     type: "video",
     src: "videos/abierta_unete.mp4",
-    duration: 10.0,
+    duration: 9.4,
     tag: "ÚNETE A LA PARTIDA",
     roleTag: ROLE_INVITADO,
     roleTagVariant: "sky",
-    highlights: [{ xPct: 50, yPct: 79, from: 6.6, duration: 0.7 }],
+    highlights: [{ xPct: 50, yPct: 79, from: 2.0, duration: 0.6 }],
     captions: [
       {
-        text: "Cada jugador ve cuántos lugares están confirmados y disponibles antes de sumarse.",
+        text: "Cada jugador puede ver el detalle de la partida antes de unirse.",
         from: 0,
-        duration: 4.0,
+        duration: 2.4,
       },
       {
         text: WARNING_CAPTION,
-        from: 4.0,
-        duration: 6.0,
+        from: 2.4,
+        duration: 7.0,
       },
     ],
   },
@@ -159,7 +159,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
   {
     type: "video",
     src: "videos/abierta_detalle_inv.mp4",
-    duration: 4.0,
+    duration: 9.0,
     tag: "DETALLE DE LA PARTIDA",
     roleTag: ROLE_INVITADO,
     roleTagVariant: "sky",
@@ -167,7 +167,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
       {
         text: "En el detalle, cada jugador ve quién organiza y quiénes ya confirmaron su lugar.",
         from: 0,
-        duration: 4.0,
+        duration: 9.0,
       },
     ],
   },
