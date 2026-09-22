@@ -11,7 +11,7 @@ export const MAIN_TITLE_PA = "¿Cómo reservar una partida abierta?";
 export const CLOSING_TITLE_PA = "¡Así se arma una partida abierta entre todos!";
 
 export const TITLE_DURATION_PA = 7;
-export const CLOSING_DURATION_PA = 6.3;
+export const CLOSING_DURATION_PA = 2.3;
 
 const ROLE_ORGANIZADOR = "Vista del organizador";
 const ROLE_INVITADO = "Vista del invitado";
@@ -56,7 +56,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
   {
     type: "video",
     src: "videos/abierta_primer_jugador.mp4",
-    duration: 12.0,
+    duration: 14.0,
     tag: "ERES EL PRIMER JUGADOR",
     roleTag: ROLE_ORGANIZADOR,
     highlights: [{ xPct: 50, yPct: 79, from: 7.7, duration: 0.6 }],
@@ -69,7 +69,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
       {
         text: WARNING_CAPTION,
         from: 8.0,
-        duration: 4.0,
+        duration: 6.0,
       },
     ],
   },
@@ -131,7 +131,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
   {
     type: "video",
     src: "videos/abierta_unete.mp4",
-    duration: 11.4,
+    duration: 13.4,
     tag: "ÚNETE A LA PARTIDA",
     roleTag: ROLE_INVITADO,
     roleTagVariant: "sky",
@@ -145,7 +145,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
       {
         text: WARNING_CAPTION,
         from: 5.4,
-        duration: 6.0,
+        duration: 8.0,
       },
     ],
   },
