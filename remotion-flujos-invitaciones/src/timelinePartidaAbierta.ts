@@ -11,7 +11,7 @@ export const MAIN_TITLE_PA = "¿Cómo reservar una partida abierta?";
 export const CLOSING_TITLE_PA = "¡Así se arma una partida abierta entre todos!";
 
 export const TITLE_DURATION_PA = 7;
-export const CLOSING_DURATION_PA = 11.3;
+export const CLOSING_DURATION_PA = 6.3;
 
 const ROLE_ORGANIZADOR = "Vista del organizador";
 const ROLE_INVITADO = "Vista del invitado";
@@ -24,15 +24,16 @@ export const CLIPS_PA: ClipSpecPA[] = [
   {
     type: "video",
     src: "videos/abierta_reservar.mp4",
-    duration: 5.0,
+    duration: 8.0,
     tag: "RESERVAR CANCHA",
     roleTag: ROLE_ORGANIZADOR,
     phoneCropTop: 145,
+    highlights: [{ xPct: 50, yPct: 65, from: 3.5, duration: 0.6 }],
     captions: [
       {
-        text: "Elige “Partida Abierta” si quieres jugar aunque todavía no tengas armado tu grupo.",
+        text: "Elige “Partida Abierta” si quieres reservar una partida de manera individual.",
         from: 0,
-        duration: 5.0,
+        duration: 8.0,
       },
     ],
   },
@@ -43,6 +44,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
     tag: "HORARIOS DISPONIBLES",
     roleTag: ROLE_ORGANIZADOR,
     phoneCropTop: 145,
+    highlights: [{ xPct: 50, yPct: 79, from: 9.0, duration: 0.6 }],
     captions: [
       {
         text: "Elige la fecha y el horario disponible para tu partida.",
@@ -117,6 +119,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
     tag: "PARTIDA ABIERTA DISPONIBLE",
     roleTag: ROLE_INVITADO,
     roleTagVariant: "sky",
+    highlights: [{ xPct: 85, yPct: 13, from: 4.9, duration: 0.6 }],
     captions: [
       {
         text: "Los demás socios ven la partida abierta disponible desde la pantalla de inicio, con los lugares que aún faltan por completar.",
@@ -128,21 +131,21 @@ export const CLIPS_PA: ClipSpecPA[] = [
   {
     type: "video",
     src: "videos/abierta_unete.mp4",
-    duration: 9.4,
+    duration: 11.4,
     tag: "ÚNETE A LA PARTIDA",
     roleTag: ROLE_INVITADO,
     roleTagVariant: "sky",
-    highlights: [{ xPct: 50, yPct: 79, from: 2.0, duration: 0.6 }],
+    highlights: [{ xPct: 50, yPct: 79, from: 5.4, duration: 0.6 }],
     captions: [
       {
         text: "Cada jugador puede ver el detalle de la partida antes de unirse.",
         from: 0,
-        duration: 2.4,
+        duration: 4.4,
       },
       {
         text: WARNING_CAPTION,
-        from: 2.4,
-        duration: 7.0,
+        from: 5.4,
+        duration: 6.0,
       },
     ],
   },
