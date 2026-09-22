@@ -11,7 +11,7 @@ export const MAIN_TITLE_PA = "¿Cómo reservar una partida abierta?";
 export const CLOSING_TITLE_PA = "¡Así se arma una partida abierta entre todos!";
 
 export const TITLE_DURATION_PA = 7;
-export const CLOSING_DURATION_PA = 2.3;
+export const CLOSING_DURATION_PA = 1.8;
 
 const ROLE_ORGANIZADOR = "Vista del organizador";
 const ROLE_INVITADO = "Vista del invitado";
