@@ -166,9 +166,11 @@ export const CLIPS_PA: ClipSpecPA[] = [
     captions: [],
   },
   {
+    // Extended with a frozen tail (tpad) so the total video reaches exactly
+    // 1:29, matching the new audio track's length.
     type: "video",
     src: "videos/abierta_detalle_inv.mp4",
-    duration: 10.0,
+    duration: 11.966667,
     tag: "DETALLE DE LA PARTIDA",
     roleTag: ROLE_INVITADO,
     roleTagVariant: "sky",
@@ -176,7 +178,7 @@ export const CLIPS_PA: ClipSpecPA[] = [
       {
         text: "En el detalle, cada jugador ve quién organiza y quiénes ya confirmaron su lugar.",
         from: 0,
-        duration: 10.0,
+        duration: 11.966667,
       },
     ],
   },
