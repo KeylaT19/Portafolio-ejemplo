@@ -75,9 +75,11 @@ export const CLIPS_PA: ClipSpecPA[] = [
   },
   {
     // No tag/caption: the "¡Participación confirmada!" screen speaks for itself.
-    type: "video",
-    src: "videos/abierta_confirmada_org.mp4",
-    duration: 3.8,
+    // Frozen still (not the source video) so the visible content stays fully
+    // settled after trimming out an internal segment per user request.
+    type: "image",
+    src: "videos/abierta_confirmada_org_still.png",
+    duration: 2.8,
     tag: "",
     roleTag: ROLE_ORGANIZADOR,
     captions: [],
@@ -151,9 +153,11 @@ export const CLIPS_PA: ClipSpecPA[] = [
   },
   {
     // No tag/caption: same confirmation screen as the organizer's.
-    type: "video",
-    src: "videos/abierta_confirmada_inv.mp4",
-    duration: 3.7,
+    // Frozen still (not the source video) so the visible content stays fully
+    // settled after trimming out an internal segment per user request.
+    type: "image",
+    src: "videos/abierta_confirmada_inv_still.png",
+    duration: 0.7,
     tag: "",
     roleTag: ROLE_INVITADO,
     roleTagVariant: "sky",
