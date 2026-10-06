@@ -4,6 +4,7 @@ import { MyCompositionH } from "./CompositionH";
 import { MyCompositionSuplente } from "./CompositionSuplente";
 import { MyCompositionSinReserva } from "./CompositionSinReserva";
 import { MyCompositionPartidaAbierta } from "./CompositionPartidaAbierta";
+import { MyCompositionReenviar } from "./CompositionReenviar";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ export const RemotionRoot: React.FC = () => {
       <MyCompositionSuplente />
       <MyCompositionSinReserva />
       <MyCompositionPartidaAbierta />
+      <MyCompositionReenviar />
     </>
   );
 };
