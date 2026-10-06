@@ -8,7 +8,8 @@ export const TRANSITION_FRAMES_RE = 15; // 0.5s crossfade between every scene
 export type ClipSpecRE = ClipSpec;
 
 export const MAIN_TITLE_RE = "¿Cómo reenviar una invitación?";
-export const CLOSING_TITLE_RE = "¡Así reenvías invitaciones sin duplicarlas!";
+export const CLOSING_TITLE_RE =
+  "Así de fácil reenvías invitaciones para reservaciones de partidas privadas.";
 
 export const TITLE_DURATION_RE = 7;
 export const CLOSING_DURATION_RE = 6.7;
@@ -24,7 +25,7 @@ export const CLIPS_RE: ClipSpecRE[] = [
     duration: 9.2,
     tag: "MIS JUEGOS",
     roleTag: ROLE_ORGANIZADOR,
-    highlights: [{ xPct: 63, yPct: 78, from: 8.0, duration: 0.6 }],
+    highlights: [{ xPct: 63, yPct: 78, from: 7.4, duration: 0.6 }],
     captions: [
       {
         text: "Mientras la partida privada siga “Por confirmar”, puedes volver a su detalle para reenviar las invitaciones pendientes.",
@@ -75,7 +76,7 @@ export const CLIPS_RE: ClipSpecRE[] = [
     highlights: [{ xPct: 50, yPct: 92, from: 0.8, duration: 0.6 }],
     captions: [
       {
-        text: "El botón se bloquea unos minutos después de cada reenvío, para no saturar al resto del grupo.",
+        text: "El botón se bloquea unos minutos después de cada reenvío.",
         from: 0,
         duration: 8.1,
       },
