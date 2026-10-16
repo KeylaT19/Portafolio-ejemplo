@@ -1,3 +1,6 @@
 node_modules
 out
 .remotion
+# Material con licencia de Envato: no se redistribuye en el repositorio.
+public/clips
+public/audio

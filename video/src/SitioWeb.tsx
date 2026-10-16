@@ -11,7 +11,6 @@ import {
 	Fondo,
 	Laptop,
 	Logo,
-	Subtitulo,
 	TextoCinetico,
 	useEntrada,
 	useTramo,
@@ -19,21 +18,22 @@ import {
 import {PantallaArbol, PantallaCalendario, PantallaFicha, PantallaIncidenciaOT, PantallaTablero, PantallaValidacion} from './ui/escritorio';
 import {ChatCaos, EjecucionOT, IncidenciaMovil, NotificacionWA} from './ui/movil';
 import {OT} from './ui/datos';
+import {ClipFondo, MonitorVerde} from './componentes/clips';
 
 export type PropsSitio = {
-	/** true = versión muda para autoplay: rótulos en lugar de subtítulos de locución. */
-	mudo: boolean;
-	/** Archivos dentro de public/audio/. Vacío = sin audio. */
+	/** Pista dentro de public/audio/. Vacío = sin audio. */
 	musica?: string;
-	voz?: string;
+	/** Segundo de la pista en que arranca el video (alinea el remate final con el cierre). */
+	inicioMusica?: number;
 };
 
 type Linea = {t: string; de: number; a: number};
 type Plano = {
 	id: string;
 	dur: number; // segundos
+	// Texto de locución del guion; el corte final va sin voz, pero sirve para subtítulos .vtt.
 	locucion: Linea[]; // segundos relativos al plano
-	rotulo: string; // versión muda, 4–5 palabras
+	rotulo: string;
 	Contenido: React.FC;
 };
 
@@ -221,30 +221,31 @@ const Plano6: React.FC = () => (
 	</DisenoPaso>
 );
 
-const Plano7: React.FC = () => (
-	<DisenoPaso numero={undefined} etiqueta="El técnico la ejecuta" titular="Marca sus tareas, captura lecturas, sube la foto y firma." resaltar={['foto', 'firma']} extra={<Sequence from={300} layout="none"><Folio texto="Evidencia + firma" tam={44} /></Sequence>}>
+// K comprime los tiempos para que quepa después de la toma de campo.
+const Plano7: React.FC<{k?: number}> = ({k = 1}) => (
+	<DisenoPaso numero={undefined} etiqueta="El técnico la ejecuta" titular="Marca sus tareas, captura lecturas, sube la foto y firma." resaltar={['foto', 'firma']} extra={<Sequence from={Math.round(300 * k)} layout="none"><Folio texto="Evidencia + firma" tam={44} /></Sequence>}>
 		<Celular escala={0.98} rot={-3}>
-			<EjecucionOT tareasEn={40} lecturaEn={120} fotoEn={200} firmaEn={260} finalizarEn={345} />
+			<EjecucionOT tareasEn={40 * k} lecturaEn={120 * k} fotoEn={200 * k} firmaEn={260 * k} finalizarEn={345 * k} />
 			<Cursor
 				mano
 				puntos={[
-					{f: 0, x: 300, y: 700},
-					{f: 38, x: 45, y: 244, clic: true},
-					{f: 50, x: 45, y: 288, clic: true},
-					{f: 62, x: 45, y: 332, clic: true},
-					{f: 100, x: 150, y: 430},
-					{f: 118, x: 150, y: 487, clic: true},
-					{f: 170, x: 220, y: 420},
-					{f: 198, x: 267, y: 337, clic: true},
-					{f: 240, x: 40, y: 520},
-					{f: 260, x: 40, y: 520},
-					{f: 270, x: 90, y: 492},
-					{f: 278, x: 140, y: 540},
-					{f: 285, x: 200, y: 495},
-					{f: 292, x: 320, y: 525},
-					{f: 320, x: 200, y: 600},
-					{f: 342, x: 195, y: 635, clic: true},
-					{f: 400, x: 320, y: 760},
+					{f: 0 * k, x: 300, y: 700},
+					{f: 38 * k, x: 45, y: 244, clic: true},
+					{f: 50 * k, x: 45, y: 288, clic: true},
+					{f: 62 * k, x: 45, y: 332, clic: true},
+					{f: 100 * k, x: 150, y: 430},
+					{f: 118 * k, x: 150, y: 487, clic: true},
+					{f: 170 * k, x: 220, y: 420},
+					{f: 198 * k, x: 267, y: 337, clic: true},
+					{f: 240 * k, x: 40, y: 520},
+					{f: 260 * k, x: 40, y: 520},
+					{f: 270 * k, x: 90, y: 492},
+					{f: 278 * k, x: 140, y: 540},
+					{f: 285 * k, x: 200, y: 495},
+					{f: 292 * k, x: 320, y: 525},
+					{f: 320 * k, x: 200, y: 600},
+					{f: 342 * k, x: 195, y: 635, clic: true},
+					{f: 400 * k, x: 320, y: 760},
 				]}
 			/>
 		</Celular>
@@ -360,11 +361,183 @@ const Plano11: React.FC = () => {
 	);
 };
 
+// ───────────────────── Tomas reales (Envato) ─────────────────────
+
+/** Texto sobre clip: etiqueta + titular en el tercio inferior izquierdo. */
+const TextoSobreClip: React.FC<{etiqueta?: string; titular: string; resaltar?: string[]; retraso?: number; tam?: number}> = ({
+	etiqueta,
+	titular,
+	resaltar,
+	retraso = 6,
+	tam = 76,
+}) => (
+	<AbsoluteFill style={{justifyContent: 'flex-end', padding: '0 110px 110px'}}>
+		<AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,20,52,.88) 0%, rgba(0,20,52,.45) 38%, transparent 62%)'}} />
+		<div style={{position: 'relative'}}>
+			{etiqueta && (
+				<>
+					<EtiquetaPaso texto={etiqueta} retraso={retraso} />
+					<div style={{height: 26}} />
+				</>
+			)}
+			<TextoCinetico texto={titular} tam={tam} resaltar={resaltar} retraso={retraso + 6} ancho={1400} />
+		</div>
+	</AbsoluteFill>
+);
+
+/** Toma de clip seguida de la pantalla del sistema dentro del mismo plano. */
+const ClipLuego: React.FC<{seg: number; clip: React.ReactNode; children: React.ReactNode}> = ({seg, clip, children}) => {
+	const corte = s(seg);
+	return (
+		<AbsoluteFill>
+			<Sequence durationInFrames={corte}>{clip}</Sequence>
+			<Sequence from={corte}>{children}</Sequence>
+			<Barrido en={corte} />
+		</AbsoluteFill>
+	);
+};
+
+const PlanoCaos: React.FC = () => (
+	<ClipLuego
+		seg={3}
+		clip={
+			<ClipFondo archivo="manos-laptop-celular.mp4" desde={0.5} empuje={0.1}>
+				<TextoSobreClip titular="Fotos sueltas. Chats. Un Excel." resaltar={['Excel']} />
+			</ClipFondo>
+		}
+	>
+		<Plano1 />
+	</ClipLuego>
+);
+
+const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]; etiqueta?: string; logo?: boolean; children: React.ReactNode}> = ({
+	desde,
+	titular,
+	resaltar,
+	etiqueta,
+	logo,
+	children,
+}) => {
+	const v = useEntrada(18, {damping: 14, mass: 0.7});
+	return (
+		<AbsoluteFill>
+			<MonitorVerde desde={desde}>{children}</MonitorVerde>
+			<AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,20,52,.92) 0%, rgba(0,20,52,.5) 22%, transparent 40%)'}} />
+			<div style={{position: 'absolute', left: 110, bottom: 80, display: 'flex', alignItems: 'center', gap: 36}}>
+				{logo && (
+					<div style={{opacity: v, transform: `scale(${0.7 + v * 0.3})`, background: 'rgba(255,255,255,.96)', borderRadius: 18, padding: '10px 22px'}}>
+						<Logo ancho={230} variante="color" />
+					</div>
+				)}
+				<div>
+					{etiqueta && (
+						<>
+							<EtiquetaPaso texto={etiqueta} retraso={10} />
+							<div style={{height: 18}} />
+						</>
+					)}
+					<TextoCinetico texto={titular} tam={66} resaltar={resaltar} retraso={22} ancho={1300} />
+				</div>
+			</div>
+		</AbsoluteFill>
+	);
+};
+
+const PlanoReveal: React.FC = () => (
+	<PlanoMonitor desde={0} titular="Todo tu mantenimiento en un solo lugar." resaltar={['solo', 'lugar']} logo>
+		<PantallaTablero retraso={6} />
+	</PlanoMonitor>
+);
+
+const PlanoAlberca: React.FC = () => (
+	<ClipLuego
+		seg={3.5}
+		clip={
+			<ClipFondo archivo="tecnico-alberca.mp4" desde={0.3} empuje={0.1}>
+				<TextoSobreClip etiqueta="Paso 2 — Reporta" titular="¿Una falla en la alberca?" resaltar={['alberca']} />
+			</ClipFondo>
+		}
+	>
+		<Plano5 />
+	</ClipLuego>
+);
+
+const PlanoCampo: React.FC = () => (
+	<ClipLuego
+		seg={3}
+		clip={
+			<ClipFondo archivo="tecnico-celular.mov" desde={1} empuje={0.1}>
+				<TextoSobreClip etiqueta="En campo" titular="El técnico recibe su orden en el celular." resaltar={['celular']} />
+			</ClipFondo>
+		}
+	>
+		<Plano7 k={0.76} />
+	</ClipLuego>
+);
+
+const PlanoValidacionVerde: React.FC = () => {
+	return (
+		<PlanoMonitor desde={5} etiqueta="Validación del supervisor" titular="No se cierra sola: el supervisor valida." resaltar={['valida']}>
+			<PantallaValidacion validarEn={95} />
+			<Cursor
+				puntos={[
+					{f: 0, x: 700, y: 600},
+					{f: 50, x: 900, y: 300},
+					{f: 92, x: 1250, y: 195, clic: true},
+					{f: 200, x: 1100, y: 450},
+				]}
+			/>
+		</PlanoMonitor>
+	);
+};
+
+const PlanoWhatsApp: React.FC = () => (
+	<ClipLuego
+		seg={3}
+		clip={
+			<ClipFondo archivo="manos-laptop-celular.mp4" desde={3.2} empuje={0.12}>
+				<TextoSobreClip titular="Avisos por WhatsApp a cada responsable." resaltar={['WhatsApp']} />
+			</ClipFondo>
+		}
+	>
+		<Plano10 />
+	</ClipLuego>
+);
+
+const PlanoCierre: React.FC = () => {
+	const tomas = [
+		{a: 'tecnico-alberca.mp4', d: 4},
+		{a: 'tecnico-laptop-planta.mp4', d: 6},
+		{a: 'tecnico-celular.mov', d: 5},
+	];
+	const parte = s(0.9);
+	return (
+		<ClipLuego
+			seg={2.7}
+			clip={
+				<AbsoluteFill>
+					{tomas.map((t, i) => (
+						<Sequence key={t.a} from={i * parte} durationInFrames={parte}>
+							<ClipFondo archivo={t.a} desde={t.d} empuje={0.15} />
+						</Sequence>
+					))}
+					<AbsoluteFill style={{background: 'radial-gradient(ellipse at center, rgba(0,20,52,.78) 0%, rgba(0,20,52,.55) 60%, rgba(0,20,52,.35) 100%)'}} />
+					<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+						<TextoCinetico texto="Tu equipo. Tus equipos. Con evidencia." tam={88} resaltar={['evidencia']} alinear="center" retraso={2} paso={4} ancho={1500} />
+					</AbsoluteFill>
+				</AbsoluteFill>
+			}
+		>
+			<Plano11 />
+		</ClipLuego>
+	);
+};
+
 export const PLANOS: Plano[] = [
 	{
 		id: 'caos',
 		dur: 7,
-		Contenido: Plano1,
+		Contenido: PlanoCaos,
 		rotulo: '¿Dónde quedó la evidencia?',
 		locucion: [
 			{t: '¿Dónde está el historial del último mantenimiento?', de: 0.3, a: 3.2},
@@ -375,7 +548,7 @@ export const PLANOS: Plano[] = [
 	{
 		id: 'tablero',
 		dur: 7,
-		Contenido: Plano2,
+		Contenido: PlanoReveal,
 		rotulo: 'Todo tu mantenimiento, aquí',
 		locucion: [
 			{t: 'Esto es GC GMAO.', de: 0.4, a: 2.4},
@@ -405,7 +578,7 @@ export const PLANOS: Plano[] = [
 	{
 		id: 'incidencia',
 		dur: 12,
-		Contenido: Plano5,
+		Contenido: PlanoAlberca,
 		rotulo: 'Reporta la falla con foto',
 		locucion: [
 			{t: 'Paso 2. Quien detecta la falla la reporta con foto,', de: 0.5, a: 6.5},
@@ -426,7 +599,7 @@ export const PLANOS: Plano[] = [
 	{
 		id: 'ejecucion',
 		dur: 14,
-		Contenido: Plano7,
+		Contenido: PlanoCampo,
 		rotulo: 'Se cierra con evidencia',
 		locucion: [
 			{t: 'El técnico la ejecuta:', de: 0.4, a: 3},
@@ -437,7 +610,7 @@ export const PLANOS: Plano[] = [
 	{
 		id: 'validacion',
 		dur: 8,
-		Contenido: Plano8,
+		Contenido: PlanoValidacionVerde,
 		rotulo: 'El supervisor valida',
 		locucion: [
 			{t: 'Y no se cierra sola:', de: 0.4, a: 3.2},
@@ -457,7 +630,7 @@ export const PLANOS: Plano[] = [
 	{
 		id: 'whatsapp',
 		dur: 8,
-		Contenido: Plano10,
+		Contenido: PlanoWhatsApp,
 		rotulo: 'Avisos por WhatsApp, historial aquí',
 		locucion: [
 			{t: 'Tu equipo sigue en WhatsApp.', de: 0.3, a: 3},
@@ -467,7 +640,7 @@ export const PLANOS: Plano[] = [
 	{
 		id: 'cierre',
 		dur: 9,
-		Contenido: Plano11,
+		Contenido: PlanoCierre,
 		rotulo: '',
 		locucion: [
 			{t: 'Ordena el mantenimiento de tu club.', de: 0.5, a: 4.2},
@@ -478,35 +651,7 @@ export const PLANOS: Plano[] = [
 
 export const DURACION_SITIO = PLANOS.reduce((a, p) => a + s(p.dur), 0);
 
-/** Rótulo de la versión muda: banda de marca abajo, 4–5 palabras. */
-const RotuloMudo: React.FC<{texto: string; dur: number}> = ({texto, dur}) => {
-	const f = useCurrentFrame();
-	const v = useEntrada(10, {damping: 14, mass: 0.6});
-	const sale = interpolate(f, [dur - 8, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-	if (!texto) return null;
-	return (
-		<div style={{position: 'absolute', bottom: 54, left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 200}}>
-			<div
-				style={{
-					fontFamily: fuente,
-					fontWeight: 700,
-					fontSize: 46,
-					color: c.oscuro,
-					background: c.acento,
-					padding: '12px 34px',
-					borderRadius: 14,
-					transform: `translateY(${(1 - v) * 60}px)`,
-					opacity: v * sale,
-					boxShadow: '0 18px 40px rgba(0,0,0,.3)',
-				}}
-			>
-				{texto}
-			</div>
-		</div>
-	);
-};
-
-export const SitioWeb: React.FC<PropsSitio> = ({mudo, musica, voz}) => {
+export const SitioWeb: React.FC<PropsSitio> = ({musica, inicioMusica = 0}) => {
 	let desde = 0;
 	const cortes: number[] = [];
 	return (
@@ -521,19 +666,19 @@ export const SitioWeb: React.FC<PropsSitio> = ({mudo, musica, voz}) => {
 						<Escena dur={dur} sinSalida={i === PLANOS.length - 1}>
 							<p.Contenido />
 						</Escena>
-						{mudo ? (
-							<RotuloMudo texto={p.rotulo} dur={dur} />
-						) : (
-							p.locucion.map((l, j) => <Subtitulo key={j} texto={l.t} inicio={s(l.de)} fin={s(l.a)} />)
-						)}
 					</Sequence>
 				);
 			})}
 			{cortes.map((f) => (
 				<Barrido key={f} en={f} />
 			))}
-			{musica && <Audio src={staticFile(`audio/${musica}`)} volume={(f) => interpolate(f, [0, 15, DURACION_SITIO - 45, DURACION_SITIO], [0, voz ? 0.25 : 0.8, voz ? 0.25 : 0.8, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />}
-			{voz && !mudo && <Audio src={staticFile(`audio/${voz}`)} />}
+			{musica && (
+				<Audio
+					src={staticFile(`audio/${musica}`)}
+					startFrom={s(inicioMusica)}
+					volume={(f) => interpolate(f, [0, 8, DURACION_SITIO - 10, DURACION_SITIO], [0, 0.9, 0.9, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}
+				/>
+			)}
 		</AbsoluteFill>
 	);
 };

@@ -12,16 +12,7 @@ export const RemotionRoot: React.FC = () => (
 			fps={FPS}
 			width={1920}
 			height={1080}
-			defaultProps={{mudo: false}}
-		/>
-		<Composition
-			id="SitioWebMudo"
-			component={SitioWeb}
-			durationInFrames={DURACION_SITIO}
-			fps={FPS}
-			width={1920}
-			height={1080}
-			defaultProps={{mudo: true}}
+			defaultProps={{musica: 'tech.mp3', inicioMusica: 1.8}}
 		/>
 	</>
 );
