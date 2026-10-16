@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, OffthreadVideo, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, OffthreadVideo, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import esquinasMonitor from '../ui/esquinas-monitor.json';
 
 type P = [number, number];
@@ -71,6 +71,46 @@ export const MonitorVerde: React.FC<{desde?: number; empuje?: number; children: 
 					<div style={{position: 'absolute', inset: 0, background: 'linear-gradient(120deg, rgba(255,255,255,.10) 0%, transparent 35%, transparent 70%, rgba(0,0,0,.06) 100%)'}} />
 				</div>
 			</AbsoluteFill>
+		</AbsoluteFill>
+	);
+};
+
+export type Ventana = {f: number; x: number; y: number; w: number};
+
+/**
+ * Grabación o captura real del sistema dibujada en un lienzo de 1440×900 (el de Laptop y MonitorVerde).
+ * `ventanas` recorta un área de la fuente (en píxeles de la fuente) y la anima: zoom y paneo.
+ */
+export const PantallaReal: React.FC<{
+	src: string; // ruta dentro de public/
+	ancho: number; // tamaño de la fuente en píxeles
+	alto: number;
+	video?: boolean;
+	desde?: number; // segundos dentro de la grabación
+	velocidad?: number;
+	ventanas: Ventana[];
+	children?: React.ReactNode;
+}> = ({src, ancho, alto, video, desde = 0, velocidad = 1, ventanas, children}) => {
+	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
+	const fs = ventanas.map((v) => v.f);
+	const val = (k: 'x' | 'y' | 'w') =>
+		ventanas.length === 1
+			? ventanas[0][k]
+			: interpolate(frame, fs, ventanas.map((v) => v[k]), {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: (t) => t * t * (3 - 2 * t)});
+	const w = val('w');
+	const esc = 1440 / w;
+	const x = val('x');
+	const y = Math.min(val('y'), Math.max(0, alto - 900 / esc));
+	const estilo: React.CSSProperties = {position: 'absolute', left: 0, top: 0, width: ancho, height: alto, transformOrigin: '0 0', transform: `scale(${esc}) translate(${-x}px, ${-y}px)`};
+	return (
+		<AbsoluteFill style={{width: 1440, height: 900, background: '#eef1f5', overflow: 'hidden'}}>
+			{video ? (
+				<OffthreadVideo src={staticFile(src)} startFrom={Math.round(desde * fps)} playbackRate={velocidad} muted style={estilo} />
+			) : (
+				<Img src={staticFile(src)} style={estilo} />
+			)}
+			{children}
 		</AbsoluteFill>
 	);
 };

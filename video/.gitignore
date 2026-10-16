@@ -4,3 +4,5 @@ out
 # Material con licencia de Envato: no se redistribuye en el repositorio.
 public/clips
 public/audio
+# Grabaciones y capturas del sistema (datos internos de QA): no se suben.
+public/sistema

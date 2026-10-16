@@ -1,24 +1,15 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, Sequence, interpolate, staticFile, useCurrentFrame, Easing} from 'remotion';
 import {c, fuente, s} from './tema';
-import {
-	Barrido,
-	Celular,
-	Cursor,
-	Escena,
-	EtiquetaPaso,
-	Folio,
-	Fondo,
-	Laptop,
-	Logo,
-	TextoCinetico,
-	useEntrada,
-	useTramo,
-} from './componentes/base';
-import {PantallaArbol, PantallaCalendario, PantallaFicha, PantallaIncidenciaOT, PantallaTablero, PantallaValidacion} from './ui/escritorio';
-import {ChatCaos, EjecucionOT, IncidenciaMovil, NotificacionWA} from './ui/movil';
-import {OT} from './ui/datos';
-import {ClipFondo, MonitorVerde} from './componentes/clips';
+import {Barrido, Celular, Cursor, Escena, EtiquetaPaso, Folio, Fondo, Laptop, Logo, TextoCinetico, useEntrada, useTramo} from './componentes/base';
+import {ChatCaos} from './ui/movil';
+import {ClipFondo, MonitorVerde, PantallaReal, Ventana} from './componentes/clips';
+
+/*
+ * Video del sitio (guion A, 1:45). Sin voz: música y textos.
+ * Toda pantalla del sistema que aparece es una grabación o captura real (public/sistema/).
+ * Lo único dibujado es el chat de WhatsApp del inicio, que no es parte del sistema.
+ */
 
 export type PropsSitio = {
 	/** Pista dentro de public/audio/. Vacío = sin audio. */
@@ -27,59 +18,18 @@ export type PropsSitio = {
 	inicioMusica?: number;
 };
 
-type Linea = {t: string; de: number; a: number};
-type Plano = {
-	id: string;
-	dur: number; // segundos
-	// Texto de locución del guion; el corte final va sin voz, pero sirve para subtítulos .vtt.
-	locucion: Linea[]; // segundos relativos al plano
-	rotulo: string;
-	Contenido: React.FC;
-};
+type Plano = {id: string; dur: number; Contenido: React.FC};
 
-// ───────────────────────── Planos del Guion A ─────────────────────────
+// Fuentes reales: grabaciones sin la barra del navegador (1376×606) y capturas.
+const G1 = {src: 'sistema/g1.mp4', ancho: 1376, alto: 606, video: true}; // instalaciones → detalle
+const G2 = {src: 'sistema/g2.mp4', ancho: 1376, alto: 606, video: true}; // dashboard
+const INCIDENCIAS = {src: 'sistema/incidencias.png', ancho: 1156, alto: 584};
+const NUEVA_OT = {src: 'sistema/nueva-ot.png', ancho: 1211, alto: 578};
+const UBICACION = {src: 'sistema/ubicacion.png', ancho: 1052, alto: 549};
+const CALENDARIO = {src: 'sistema/calendario.png', ancho: 1147, alto: 578};
+const OT_MOVIL = {src: 'sistema/ot-movil.png', ancho: 490, alto: 591};
 
-const Plano1: React.FC = () => {
-	const sacude = Math.sin(useCurrentFrame() * 1.3) * 1.2;
-	return (
-		<Fondo variante="cierre">
-			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '0 150px', gap: 120}}>
-				<div style={{transform: `rotate(${sacude - 4}deg)`}}>
-					<Celular escala={0.98}>
-						<ChatCaos />
-					</Celular>
-				</div>
-				<div style={{flex: 1}}>
-					<EtiquetaPaso texto="El problema" />
-					<div style={{height: 34}} />
-					<TextoCinetico texto="¿Dónde está la evidencia?" tam={104} resaltar={['evidencia']} retraso={10} ancho={900} />
-					<div style={{height: 30}} />
-					<TextoCinetico texto="Fotos sueltas, chats, un Excel y un “creo que ya se hizo”." tam={40} peso={400} color={c.tintaInversaSuave} retraso={60} paso={2} ancho={820} />
-				</div>
-			</AbsoluteFill>
-		</Fondo>
-	);
-};
-
-const Plano2: React.FC = () => {
-	const v = useEntrada(0, {damping: 16, mass: 0.9});
-	return (
-		<Fondo>
-			<AbsoluteFill style={{alignItems: 'center', paddingTop: 70}}>
-				<div style={{display: 'flex', alignItems: 'center', gap: 34, opacity: v}}>
-					<Logo ancho={260} variante="claro" />
-					<div style={{width: 2, height: 70, background: 'rgba(255,255,255,.25)'}} />
-					<TextoCinetico texto="Todo en un solo lugar" tam={66} resaltar={['solo', 'lugar']} retraso={6} />
-				</div>
-				<div style={{marginTop: 46, transform: `translateY(${(1 - v) * 260}px) scale(${0.85 + v * 0.15})`}}>
-					<Laptop ancho={1120} rotX={8 - v * 8}>
-						<PantallaTablero retraso={10} />
-					</Laptop>
-				</div>
-			</AbsoluteFill>
-		</Fondo>
-	);
-};
+// ───────────────────────── Piezas de composición ─────────────────────────
 
 const DisenoPaso: React.FC<{
 	numero?: number;
@@ -93,25 +43,23 @@ const DisenoPaso: React.FC<{
 }> = ({numero, etiqueta, titular, resaltar, bajada, children, lado = 'izq', extra}) => {
 	const v = useEntrada(4, {damping: 15, mass: 0.9});
 	const texto = (
-		<div style={{width: 560, flexShrink: 0}}>
+		<div style={{width: 540, flexShrink: 0}}>
 			<EtiquetaPaso numero={numero} texto={etiqueta} />
 			<div style={{height: 30}} />
-			<TextoCinetico texto={titular} tam={70} resaltar={resaltar} retraso={8} />
+			<TextoCinetico texto={titular} tam={66} resaltar={resaltar} retraso={8} />
 			{bajada && (
 				<>
 					<div style={{height: 24}} />
-					<TextoCinetico texto={bajada} tam={32} peso={400} color={c.tintaInversaSuave} retraso={24} paso={1} />
+					<TextoCinetico texto={bajada} tam={30} peso={400} color={c.tintaInversaSuave} retraso={24} paso={1} />
 				</>
 			)}
 			{extra && <div style={{marginTop: 36}}>{extra}</div>}
 		</div>
 	);
-	const disp = (
-		<div style={{transform: `translateX(${(1 - v) * (lado === 'izq' ? 300 : -300)}px)`, opacity: v}}>{children}</div>
-	);
+	const disp = <div style={{transform: `translateX(${(1 - v) * (lado === 'izq' ? 300 : -300)}px)`, opacity: v}}>{children}</div>;
 	return (
 		<Fondo>
-			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 80, padding: '0 90px 60px'}}>
+			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 70, padding: '0 70px'}}>
 				{lado === 'izq' ? (
 					<>
 						{texto}
@@ -128,190 +76,325 @@ const DisenoPaso: React.FC<{
 	);
 };
 
-const Plano3: React.FC = () => (
-	<DisenoPaso numero={1} etiqueta="Paso 1 — Organiza" titular="Tu club por instalaciones, zonas y equipos." resaltar={['zonas', 'equipos']} bajada="Cada equipo con su ficha, sus fotos y su código QR.">
-		<Laptop ancho={1100} rotY={-10}>
-			<PantallaArbol seleccion={150} />
-			<Cursor
-				puntos={[
-					{f: 0, x: 900, y: 600},
-					{f: 8, x: 420, y: 153, clic: true},
-					{f: 30, x: 420, y: 153},
-					{f: 48, x: 440, y: 211, clic: true},
-					{f: 120, x: 440, y: 211},
-					{f: 146, x: 520, y: 269, clic: true},
-					{f: 200, x: 800, y: 400},
-				]}
-			/>
-		</Laptop>
-	</DisenoPaso>
+/** Texto sobre clip: etiqueta + titular en el tercio inferior izquierdo. */
+const TextoSobreClip: React.FC<{etiqueta?: string; titular: string; resaltar?: string[]; retraso?: number; tam?: number}> = ({
+	etiqueta,
+	titular,
+	resaltar,
+	retraso = 6,
+	tam = 76,
+}) => (
+	<AbsoluteFill style={{justifyContent: 'flex-end', padding: '0 110px 110px'}}>
+		<AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,20,52,.88) 0%, rgba(0,20,52,.45) 38%, transparent 62%)'}} />
+		<div style={{position: 'relative'}}>
+			{etiqueta && (
+				<>
+					<EtiquetaPaso texto={etiqueta} retraso={retraso} />
+					<div style={{height: 26}} />
+				</>
+			)}
+			<TextoCinetico texto={titular} tam={tam} resaltar={resaltar} retraso={retraso + 6} ancho={1500} />
+		</div>
+	</AbsoluteFill>
 );
 
-const Plano4: React.FC = () => (
-	<DisenoPaso
-		lado="der"
-		etiqueta="Ficha del activo"
-		titular="Un identificador que cualquiera puede citar."
-		resaltar={['identificador']}
-		bajada="Marca, modelo, garantía y ubicación en el mapa."
-		extra={<Folio texto="AC001 · QR · Mapa" retraso={40} />}
-	>
-		<Laptop ancho={1080} rotY={10}>
-			<PantallaFicha mapaEn={135} />
-			<Cursor
-				puntos={[
-					{f: 0, x: 900, y: 500},
-					{f: 30, x: 700, y: 400},
-					{f: 110, x: 760, y: 420},
-					{f: 132, x: 405, y: 150, clic: true},
-					{f: 200, x: 560, y: 380},
-				]}
-			/>
-		</Laptop>
-	</DisenoPaso>
-);
-
-const Plano5: React.FC = () => (
-	<DisenoPaso numero={2} etiqueta="Paso 2 — Reporta" titular="Quien detecta la falla, la reporta con foto." resaltar={['foto']} bajada="Desde donde esté, en su celular.">
-		<Celular escala={0.98} rot={3}>
-			<IncidenciaMovil prioridadEn={72} fotoEn={132} guardarEn={205} />
-			<Cursor
-				mano
-				puntos={[
-					{f: 0, x: 300, y: 700},
-					{f: 50, x: 260, y: 520},
-					{f: 70, x: 240, y: 350, clic: true},
-					{f: 100, x: 240, y: 350},
-					{f: 128, x: 73, y: 463, clic: true},
-					{f: 170, x: 140, y: 520},
-					{f: 202, x: 195, y: 570, clic: true},
-					{f: 260, x: 320, y: 700},
-				]}
-			/>
-		</Celular>
-	</DisenoPaso>
-);
-
-const Plano6: React.FC = () => (
-	<DisenoPaso
-		lado="der"
-		etiqueta="Del reporte a la orden"
-		titular="El supervisor la convierte en orden, la asigna y le pone fecha."
-		resaltar={['orden']}
-		extra={
-			<Sequence from={205} layout="none">
-				<Folio texto={OT} tam={56} />
-			</Sequence>
-		}
-	>
-		<Laptop ancho={1080} rotY={10}>
-			<PantallaIncidenciaOT convertirEn={60} folioEn={200} />
-			<Cursor
-				puntos={[
-					{f: 0, x: 700, y: 600},
-					{f: 56, x: 1160, y: 198, clic: true},
-					{f: 75, x: 1160, y: 230},
-					{f: 88, x: 1100, y: 400, clic: true},
-					{f: 100, x: 1100, y: 400},
-					{f: 113, x: 1100, y: 482, clic: true},
-					{f: 200, x: 1250, y: 600},
-				]}
-			/>
-		</Laptop>
-	</DisenoPaso>
-);
-
-// K comprime los tiempos para que quepa después de la toma de campo.
-const Plano7: React.FC<{k?: number}> = ({k = 1}) => (
-	<DisenoPaso numero={undefined} etiqueta="El técnico la ejecuta" titular="Marca sus tareas, captura lecturas, sube la foto y firma." resaltar={['foto', 'firma']} extra={<Sequence from={Math.round(300 * k)} layout="none"><Folio texto="Evidencia + firma" tam={44} /></Sequence>}>
-		<Celular escala={0.98} rot={-3}>
-			<EjecucionOT tareasEn={40 * k} lecturaEn={120 * k} fotoEn={200 * k} firmaEn={260 * k} finalizarEn={345 * k} />
-			<Cursor
-				mano
-				puntos={[
-					{f: 0 * k, x: 300, y: 700},
-					{f: 38 * k, x: 45, y: 244, clic: true},
-					{f: 50 * k, x: 45, y: 288, clic: true},
-					{f: 62 * k, x: 45, y: 332, clic: true},
-					{f: 100 * k, x: 150, y: 430},
-					{f: 118 * k, x: 150, y: 487, clic: true},
-					{f: 170 * k, x: 220, y: 420},
-					{f: 198 * k, x: 267, y: 337, clic: true},
-					{f: 240 * k, x: 40, y: 520},
-					{f: 260 * k, x: 40, y: 520},
-					{f: 270 * k, x: 90, y: 492},
-					{f: 278 * k, x: 140, y: 540},
-					{f: 285 * k, x: 200, y: 495},
-					{f: 292 * k, x: 320, y: 525},
-					{f: 320 * k, x: 200, y: 600},
-					{f: 342 * k, x: 195, y: 635, clic: true},
-					{f: 400 * k, x: 320, y: 760},
-				]}
-			/>
-		</Celular>
-	</DisenoPaso>
-);
-
-const Plano8: React.FC = () => (
-	<DisenoPaso lado="der" etiqueta="Validación del supervisor" titular="Y no se cierra sola: el supervisor valida o rechaza." resaltar={['valida']}>
-		<Laptop ancho={1080} rotY={10}>
-			<PantallaValidacion validarEn={120} />
-			<Cursor
-				puntos={[
-					{f: 0, x: 700, y: 600},
-					{f: 60, x: 900, y: 300},
-					{f: 116, x: 1250, y: 195, clic: true},
-					{f: 200, x: 1100, y: 450},
-				]}
-			/>
-		</Laptop>
-	</DisenoPaso>
-);
-
-const Plano9: React.FC = () => (
-	<DisenoPaso numero={3} etiqueta="Paso 3 — Programa" titular="Lo que se repite, se programa." resaltar={['programa']} bajada="El sistema genera las órdenes solo.">
-		<Laptop ancho={1100} rotY={-10}>
-			<PantallaCalendario arrastrarEn={70} anualEn={205} />
-			<Cursor
-				puntos={[
-					{f: 0, x: 800, y: 700},
-					{f: 60, x: 360, y: 484, clic: true},
-					{f: 70, x: 360, y: 484},
-					{f: 90, x: 518, y: 484},
-					{f: 130, x: 700, y: 400},
-					{f: 200, x: 1368, y: 130, clic: true},
-					{f: 280, x: 1100, y: 500},
-				]}
-			/>
-		</Laptop>
-	</DisenoPaso>
-);
-
-const Plano10: React.FC = () => {
-	const v = useEntrada(0);
-	const v2 = useEntrada(30);
+/** Partes consecutivas dentro de un plano, con barrido entre ellas. */
+const Tramos: React.FC<{partes: {seg: number; el: React.ReactNode}[]}> = ({partes}) => {
+	let desde = 0;
 	return (
-		<Fondo>
-			<AbsoluteFill style={{alignItems: 'center', paddingTop: 60}}>
-				<TextoCinetico texto="WhatsApp sí. Caos no." tam={84} resaltar={['sí']} alinear="center" retraso={4} />
-				<div style={{display: 'flex', alignItems: 'center', gap: 70, marginTop: 40}}>
-					<div style={{transform: `translateY(${(1 - v) * 200}px)`, opacity: v}}>
-						<Celular escala={0.82}>
-							<NotificacionWA llegaEn={14} />
-						</Celular>
+		<AbsoluteFill>
+			{partes.map((p, i) => {
+				const ini = desde;
+				const dur = s(p.seg);
+				desde += dur;
+				return (
+					<React.Fragment key={i}>
+						<Sequence from={ini} durationInFrames={dur}>
+							{p.el}
+						</Sequence>
+						{i > 0 && <Barrido en={ini} />}
+					</React.Fragment>
+				);
+			})}
+		</AbsoluteFill>
+	);
+};
+
+const Clip: React.FC<{archivo: string; desde: number; etiqueta?: string; titular: string; resaltar?: string[]}> = ({archivo, desde, ...t}) => (
+	<ClipFondo archivo={archivo} desde={desde} empuje={0.1}>
+		<TextoSobreClip {...t} />
+	</ClipFondo>
+);
+
+/** Monitor con pantalla verde (toma de Envato) + texto inferior. */
+const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]; etiqueta?: string; logo?: boolean; children: React.ReactNode}> = ({
+	desde,
+	titular,
+	resaltar,
+	etiqueta,
+	logo,
+	children,
+}) => {
+	const v = useEntrada(18, {damping: 14, mass: 0.7});
+	return (
+		<AbsoluteFill>
+			<MonitorVerde desde={desde}>{children}</MonitorVerde>
+			<AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,20,52,.92) 0%, rgba(0,20,52,.5) 22%, transparent 40%)'}} />
+			<div style={{position: 'absolute', left: 110, bottom: 80, display: 'flex', alignItems: 'center', gap: 36}}>
+				{logo && (
+					<div style={{opacity: v, transform: `scale(${0.7 + v * 0.3})`, background: 'rgba(255,255,255,.96)', borderRadius: 18, padding: '10px 22px'}}>
+						<Logo ancho={230} variante="color" />
 					</div>
-					<div style={{transform: `translateX(${(1 - v2) * 300}px)`, opacity: v2}}>
-						<Laptop ancho={1000}>
-							<PantallaTablero retraso={40} />
-						</Laptop>
-					</div>
+				)}
+				<div>
+					{etiqueta && (
+						<>
+							<EtiquetaPaso texto={etiqueta} retraso={10} />
+							<div style={{height: 18}} />
+						</>
+					)}
+					<TextoCinetico texto={titular} tam={64} resaltar={resaltar} retraso={22} ancho={1300} />
+				</div>
+			</div>
+		</AbsoluteFill>
+	);
+};
+
+/** Vista móvil real (captura) en un marco de celular con la proporción de la captura. */
+const MovilReal: React.FC<{src: string; ancho: number; alto: number; escala: number; rot?: number; recorrido?: number}> = ({src, ancho, alto, escala, rot = 0, recorrido = 0}) => {
+	const f = useCurrentFrame();
+	const v = useEntrada(0, {damping: 14, mass: 0.8});
+	const sube = interpolate(f, [20, 150], [0, recorrido], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic)});
+	return (
+		<div
+			style={{
+				padding: 16,
+				borderRadius: 54,
+				background: 'linear-gradient(145deg, #1f2937, #0b1220)',
+				boxShadow: '0 50px 100px rgba(0,10,30,.6), 0 0 0 2px rgba(255,255,255,.12) inset',
+				transform: `rotate(${rot}deg) translateY(${(1 - v) * 200}px)`,
+				opacity: v,
+			}}
+		>
+			<div style={{width: ancho * escala, height: alto * escala, borderRadius: 40, overflow: 'hidden', background: '#fff'}}>
+				<Img src={staticFile(src)} style={{width: ancho * escala, height: alto * escala, transform: `translateY(${-sube}px)`}} />
+			</div>
+		</div>
+	);
+};
+
+const v = (f: number, x: number, y: number, w: number): Ventana => ({f, x, y, w});
+
+// ───────────────────────── Planos ─────────────────────────
+
+const ChatPlano: React.FC = () => {
+	const sacude = Math.sin(useCurrentFrame() * 1.3) * 1.2;
+	return (
+		<Fondo variante="cierre">
+			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '0 150px', gap: 120}}>
+				<div style={{transform: `rotate(${sacude - 4}deg)`}}>
+					<Celular escala={0.98}>
+						<ChatCaos />
+					</Celular>
+				</div>
+				<div style={{flex: 1}}>
+					<EtiquetaPaso texto="El problema" />
+					<div style={{height: 34}} />
+					<TextoCinetico texto="¿Dónde está la evidencia?" tam={104} resaltar={['evidencia']} retraso={6} ancho={900} />
 				</div>
 			</AbsoluteFill>
 		</Fondo>
 	);
 };
 
-const Plano11: React.FC = () => {
+const P1Caos: React.FC = () => (
+	<Tramos
+		partes={[
+			{seg: 3, el: <Clip archivo="manos-laptop-celular.mp4" desde={0.5} titular="Fotos sueltas. Chats. Un Excel." resaltar={['Excel']} />},
+			{seg: 4, el: <ChatPlano />},
+		]}
+	/>
+);
+
+const P2Reveal: React.FC = () => (
+	<PlanoMonitor desde={0} titular="Todo tu mantenimiento en un solo lugar." resaltar={['solo', 'lugar']} logo>
+		<PantallaReal {...G2} desde={0.3} ventanas={[v(0, 0, 0, 970), v(70, 0, 0, 970), v(150, 406, 0, 970)]} />
+	</PlanoMonitor>
+);
+
+const P3Organiza: React.FC = () => (
+	<DisenoPaso numero={1} etiqueta="Paso 1 — Organiza" titular="Tus instalaciones, zonas y activos." resaltar={['zonas', 'activos']} bajada="Cada uno con su historial de incidencias y órdenes.">
+		<Laptop ancho={1180} rotY={-8}>
+			<Tramos
+				partes={[
+					{seg: 6.8, el: <PantallaReal {...G1} desde={0.5} ventanas={[v(0, 0, 0, 970), v(204, 406, 0, 970)]} />},
+					{seg: 5.2, el: <PantallaReal {...G1} desde={17.2} ventanas={[v(0, 120, 0, 970), v(156, 300, 0, 970)]} />},
+				]}
+			/>
+		</Laptop>
+	</DisenoPaso>
+);
+
+const P4Detalle: React.FC = () => (
+	<DisenoPaso
+		lado="der"
+		etiqueta="Todo con folio"
+		titular="Zonas, activos, registros y archivos en un clic."
+		resaltar={['clic']}
+		extra={
+			<Sequence from={s(3)} layout="none">
+				<Folio texto="UB001 · AC007 · QR" tam={40} />
+			</Sequence>
+		}
+	>
+		<Laptop ancho={1180} rotY={8}>
+			<Tramos
+				partes={[
+					{seg: 2.4, el: <PantallaReal {...G1} desde={22.4} ventanas={[v(0, 200, 0, 970)]} />},
+					{seg: 5.6, el: <PantallaReal {...UBICACION} ventanas={[v(0, 0, 0, 878), v(168, 120, 0, 878)]} />},
+				]}
+			/>
+		</Laptop>
+	</DisenoPaso>
+);
+
+const P5Reporta: React.FC = () => (
+	<Tramos
+		partes={[
+			{seg: 3.5, el: <Clip archivo="tecnico-alberca.mp4" desde={0.3} etiqueta="Paso 2 — Reporta" titular="¿Una falla en la alberca?" resaltar={['alberca']} />},
+			{
+				seg: 8.5,
+				el: (
+					<DisenoPaso numero={2} etiqueta="Paso 2 — Reporta" titular="Cada falla queda reportada." resaltar={['reportada']} bajada="Pendientes, abiertas y cerradas, con su importancia.">
+						<Laptop ancho={1180} rotY={-8}>
+							<PantallaReal {...INCIDENCIAS} ventanas={[v(0, 0, 0, 934), v(240, 222, 0, 934)]}>
+								<Cursor
+									puntos={[
+										{f: 0, x: 900, y: 700},
+										{f: 60, x: 250, y: 270, clic: true},
+										{f: 120, x: 600, y: 470},
+										{f: 200, x: 1180, y: 520},
+									]}
+								/>
+							</PantallaReal>
+						</Laptop>
+					</DisenoPaso>
+				),
+			},
+		]}
+	/>
+);
+
+const P6Orden: React.FC = () => (
+	<DisenoPaso
+		lado="der"
+		etiqueta="Del reporte a la orden"
+		titular="Se vuelve orden de trabajo, con su ubicación."
+		resaltar={['orden']}
+		bajada="Instalación, zona o activo: tú eliges el destino."
+		extra={
+			<Sequence from={s(6)} layout="none">
+				<Folio texto="Nace con folio" tam={44} />
+			</Sequence>
+		}
+	>
+		<Laptop ancho={1180} rotY={8}>
+			<PantallaReal {...NUEVA_OT} ventanas={[v(0, 60, 0, 1000), v(150, 143, 0, 925)]}>
+				<Cursor
+					puntos={[
+						{f: 0, x: 1200, y: 800},
+						{f: 50, x: 716, y: 439, clic: true},
+						{f: 120, x: 600, y: 560},
+						{f: 200, x: 778, y: 713, clic: true},
+						{f: 300, x: 1000, y: 820},
+					]}
+				/>
+			</PantallaReal>
+		</Laptop>
+	</DisenoPaso>
+);
+
+const P7Campo: React.FC = () => (
+	<Tramos
+		partes={[
+			{seg: 4, el: <Clip archivo="tecnico-celular.mov" desde={1} etiqueta="En campo" titular="El técnico ve sus órdenes en el celular." resaltar={['celular']} />},
+			{
+				seg: 6,
+				el: (
+					<DisenoPaso numero={undefined} etiqueta="Desde el celular" titular="Inicia, pausa y finaliza cada orden." resaltar={['finaliza']} bajada="Sin papeles ni chats de por medio.">
+						<MovilReal {...OT_MOVIL} escala={1.32} rot={-3} />
+					</DisenoPaso>
+				),
+			},
+			{seg: 4, el: <Clip archivo="tecnico-laptop-planta.mp4" desde={3} titular="En la alberca, en planta o en oficina." resaltar={['oficina']} />},
+		]}
+	/>
+);
+
+const P8Seguimiento: React.FC = () => (
+	<PlanoMonitor desde={5} etiqueta="Seguimiento" titular="Cada orden, su estado y quién la atiende." resaltar={['estado']}>
+		<PantallaReal {...G2} desde={10.5} velocidad={0.75} ventanas={[v(0, 0, 0, 970), v(240, 300, 0, 970)]} />
+	</PlanoMonitor>
+);
+
+const P9Programa: React.FC = () => (
+	<DisenoPaso numero={3} etiqueta="Paso 3 — Programa" titular="Lo que se repite, se programa." resaltar={['programa']} bajada="Vista por semana, mes, trimestre, semestre o año.">
+		<Laptop ancho={1180} rotY={-8}>
+			<PantallaReal {...CALENDARIO} ventanas={[v(0, 0, 0, 925), v(150, 222, 0, 925), v(300, 222, 0, 700)]}>
+				<Cursor
+					puntos={[
+						{f: 0, x: 900, y: 750},
+						{f: 90, x: 780, y: 220},
+						{f: 200, x: 1150, y: 230},
+						{f: 300, x: 1000, y: 500},
+					]}
+				/>
+			</PantallaReal>
+		</Laptop>
+	</DisenoPaso>
+);
+
+const P10WhatsApp: React.FC = () => (
+	<Tramos
+		partes={[
+			{seg: 3, el: <Clip archivo="manos-laptop-celular.mp4" desde={3.2} titular="Tu equipo sigue en WhatsApp." resaltar={['WhatsApp']} />},
+			{
+				seg: 5,
+				el: (
+					<DisenoPaso lado="der" etiqueta="WhatsApp sí. Caos no." titular="El historial vive aquí." resaltar={['historial']} bajada="Indicadores, gráficas y registros al día.">
+						<Laptop ancho={1180} rotY={8}>
+							<PantallaReal {...G2} desde={6.5} ventanas={[v(0, 200, 0, 970)]} />
+						</Laptop>
+					</DisenoPaso>
+				),
+			},
+		]}
+	/>
+);
+
+const Montaje: React.FC = () => {
+	const tomas = [
+		{a: 'tecnico-alberca.mp4', d: 4},
+		{a: 'tecnico-laptop-planta.mp4', d: 6},
+		{a: 'tecnico-celular.mov', d: 5},
+	];
+	const parte = s(0.9);
+	return (
+		<AbsoluteFill>
+			{tomas.map((t, i) => (
+				<Sequence key={t.a} from={i * parte} durationInFrames={parte}>
+					<ClipFondo archivo={t.a} desde={t.d} empuje={0.15} />
+				</Sequence>
+			))}
+			<AbsoluteFill style={{background: 'radial-gradient(ellipse at center, rgba(0,20,52,.78) 0%, rgba(0,20,52,.55) 60%, rgba(0,20,52,.35) 100%)'}} />
+			<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+				<TextoCinetico texto="Tu equipo. Tus activos. Con evidencia." tam={88} resaltar={['evidencia']} alinear="center" retraso={2} paso={4} ancho={1500} />
+			</AbsoluteFill>
+		</AbsoluteFill>
+	);
+};
+
+const PlanoLogo: React.FC = () => {
 	const f = useCurrentFrame();
 	const logo = useEntrada(0, {damping: 12, mass: 0.8});
 	const boton = useEntrada(40, {damping: 10, mass: 0.7});
@@ -361,292 +444,21 @@ const Plano11: React.FC = () => {
 	);
 };
 
-// ───────────────────── Tomas reales (Envato) ─────────────────────
 
-/** Texto sobre clip: etiqueta + titular en el tercio inferior izquierdo. */
-const TextoSobreClip: React.FC<{etiqueta?: string; titular: string; resaltar?: string[]; retraso?: number; tam?: number}> = ({
-	etiqueta,
-	titular,
-	resaltar,
-	retraso = 6,
-	tam = 76,
-}) => (
-	<AbsoluteFill style={{justifyContent: 'flex-end', padding: '0 110px 110px'}}>
-		<AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,20,52,.88) 0%, rgba(0,20,52,.45) 38%, transparent 62%)'}} />
-		<div style={{position: 'relative'}}>
-			{etiqueta && (
-				<>
-					<EtiquetaPaso texto={etiqueta} retraso={retraso} />
-					<div style={{height: 26}} />
-				</>
-			)}
-			<TextoCinetico texto={titular} tam={tam} resaltar={resaltar} retraso={retraso + 6} ancho={1400} />
-		</div>
-	</AbsoluteFill>
-);
-
-/** Toma de clip seguida de la pantalla del sistema dentro del mismo plano. */
-const ClipLuego: React.FC<{seg: number; clip: React.ReactNode; children: React.ReactNode}> = ({seg, clip, children}) => {
-	const corte = s(seg);
-	return (
-		<AbsoluteFill>
-			<Sequence durationInFrames={corte}>{clip}</Sequence>
-			<Sequence from={corte}>{children}</Sequence>
-			<Barrido en={corte} />
-		</AbsoluteFill>
-	);
-};
-
-const PlanoCaos: React.FC = () => (
-	<ClipLuego
-		seg={3}
-		clip={
-			<ClipFondo archivo="manos-laptop-celular.mp4" desde={0.5} empuje={0.1}>
-				<TextoSobreClip titular="Fotos sueltas. Chats. Un Excel." resaltar={['Excel']} />
-			</ClipFondo>
-		}
-	>
-		<Plano1 />
-	</ClipLuego>
-);
-
-const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]; etiqueta?: string; logo?: boolean; children: React.ReactNode}> = ({
-	desde,
-	titular,
-	resaltar,
-	etiqueta,
-	logo,
-	children,
-}) => {
-	const v = useEntrada(18, {damping: 14, mass: 0.7});
-	return (
-		<AbsoluteFill>
-			<MonitorVerde desde={desde}>{children}</MonitorVerde>
-			<AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,20,52,.92) 0%, rgba(0,20,52,.5) 22%, transparent 40%)'}} />
-			<div style={{position: 'absolute', left: 110, bottom: 80, display: 'flex', alignItems: 'center', gap: 36}}>
-				{logo && (
-					<div style={{opacity: v, transform: `scale(${0.7 + v * 0.3})`, background: 'rgba(255,255,255,.96)', borderRadius: 18, padding: '10px 22px'}}>
-						<Logo ancho={230} variante="color" />
-					</div>
-				)}
-				<div>
-					{etiqueta && (
-						<>
-							<EtiquetaPaso texto={etiqueta} retraso={10} />
-							<div style={{height: 18}} />
-						</>
-					)}
-					<TextoCinetico texto={titular} tam={66} resaltar={resaltar} retraso={22} ancho={1300} />
-				</div>
-			</div>
-		</AbsoluteFill>
-	);
-};
-
-const PlanoReveal: React.FC = () => (
-	<PlanoMonitor desde={0} titular="Todo tu mantenimiento en un solo lugar." resaltar={['solo', 'lugar']} logo>
-		<PantallaTablero retraso={6} />
-	</PlanoMonitor>
-);
-
-const PlanoAlberca: React.FC = () => (
-	<ClipLuego
-		seg={3.5}
-		clip={
-			<ClipFondo archivo="tecnico-alberca.mp4" desde={0.3} empuje={0.1}>
-				<TextoSobreClip etiqueta="Paso 2 — Reporta" titular="¿Una falla en la alberca?" resaltar={['alberca']} />
-			</ClipFondo>
-		}
-	>
-		<Plano5 />
-	</ClipLuego>
-);
-
-const PlanoCampo: React.FC = () => (
-	<ClipLuego
-		seg={3}
-		clip={
-			<ClipFondo archivo="tecnico-celular.mov" desde={1} empuje={0.1}>
-				<TextoSobreClip etiqueta="En campo" titular="El técnico recibe su orden en el celular." resaltar={['celular']} />
-			</ClipFondo>
-		}
-	>
-		<Plano7 k={0.76} />
-	</ClipLuego>
-);
-
-const PlanoValidacionVerde: React.FC = () => {
-	return (
-		<PlanoMonitor desde={5} etiqueta="Validación del supervisor" titular="No se cierra sola: el supervisor valida." resaltar={['valida']}>
-			<PantallaValidacion validarEn={95} />
-			<Cursor
-				puntos={[
-					{f: 0, x: 700, y: 600},
-					{f: 50, x: 900, y: 300},
-					{f: 92, x: 1250, y: 195, clic: true},
-					{f: 200, x: 1100, y: 450},
-				]}
-			/>
-		</PlanoMonitor>
-	);
-};
-
-const PlanoWhatsApp: React.FC = () => (
-	<ClipLuego
-		seg={3}
-		clip={
-			<ClipFondo archivo="manos-laptop-celular.mp4" desde={3.2} empuje={0.12}>
-				<TextoSobreClip titular="Avisos por WhatsApp a cada responsable." resaltar={['WhatsApp']} />
-			</ClipFondo>
-		}
-	>
-		<Plano10 />
-	</ClipLuego>
-);
-
-const PlanoCierre: React.FC = () => {
-	const tomas = [
-		{a: 'tecnico-alberca.mp4', d: 4},
-		{a: 'tecnico-laptop-planta.mp4', d: 6},
-		{a: 'tecnico-celular.mov', d: 5},
-	];
-	const parte = s(0.9);
-	return (
-		<ClipLuego
-			seg={2.7}
-			clip={
-				<AbsoluteFill>
-					{tomas.map((t, i) => (
-						<Sequence key={t.a} from={i * parte} durationInFrames={parte}>
-							<ClipFondo archivo={t.a} desde={t.d} empuje={0.15} />
-						</Sequence>
-					))}
-					<AbsoluteFill style={{background: 'radial-gradient(ellipse at center, rgba(0,20,52,.78) 0%, rgba(0,20,52,.55) 60%, rgba(0,20,52,.35) 100%)'}} />
-					<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
-						<TextoCinetico texto="Tu equipo. Tus equipos. Con evidencia." tam={88} resaltar={['evidencia']} alinear="center" retraso={2} paso={4} ancho={1500} />
-					</AbsoluteFill>
-				</AbsoluteFill>
-			}
-		>
-			<Plano11 />
-		</ClipLuego>
-	);
-};
+const P11Cierre: React.FC = () => <Tramos partes={[{seg: 2.7, el: <Montaje />}, {seg: 6.3, el: <PlanoLogo />}]} />;
 
 export const PLANOS: Plano[] = [
-	{
-		id: 'caos',
-		dur: 7,
-		Contenido: PlanoCaos,
-		rotulo: '¿Dónde quedó la evidencia?',
-		locucion: [
-			{t: '¿Dónde está el historial del último mantenimiento?', de: 0.3, a: 3.2},
-			{t: 'Si la respuesta es “espérame, está en el chat”…', de: 3.3, a: 5.6},
-			{t: '…es que no existe.', de: 5.6, a: 6.9},
-		],
-	},
-	{
-		id: 'tablero',
-		dur: 7,
-		Contenido: PlanoReveal,
-		rotulo: 'Todo tu mantenimiento, aquí',
-		locucion: [
-			{t: 'Esto es GC GMAO.', de: 0.4, a: 2.4},
-			{t: 'Un solo lugar para el mantenimiento de tu club.', de: 2.5, a: 6.8},
-		],
-	},
-	{
-		id: 'arbol',
-		dur: 12,
-		Contenido: Plano3,
-		rotulo: 'Instalaciones, zonas y equipos',
-		locucion: [
-			{t: 'Paso 1. Organizas tu club por instalaciones, zonas y equipos.', de: 0.4, a: 6},
-			{t: 'Cada equipo con su ficha, sus fotos y su código QR.', de: 6.2, a: 11.6},
-		],
-	},
-	{
-		id: 'ficha',
-		dur: 8,
-		Contenido: Plano4,
-		rotulo: 'Cada equipo, su ficha',
-		locucion: [
-			{t: 'Marca, modelo, garantía, ubicación en el mapa…', de: 0.3, a: 4},
-			{t: '…y un identificador que cualquiera puede citar.', de: 4.1, a: 7.8},
-		],
-	},
-	{
-		id: 'incidencia',
-		dur: 12,
-		Contenido: PlanoAlberca,
-		rotulo: 'Reporta la falla con foto',
-		locucion: [
-			{t: 'Paso 2. Quien detecta la falla la reporta con foto,', de: 0.5, a: 6.5},
-			{t: 'desde donde esté.', de: 6.6, a: 11.5},
-		],
-	},
-	{
-		id: 'orden',
-		dur: 10,
-		Contenido: Plano6,
-		rotulo: 'Se vuelve orden con folio',
-		locucion: [
-			{t: 'El supervisor la convierte en orden de trabajo,', de: 0.3, a: 3.8},
-			{t: 'la asigna y le pone fecha.', de: 3.9, a: 6.6},
-			{t: 'Nace con folio.', de: 6.7, a: 9.8},
-		],
-	},
-	{
-		id: 'ejecucion',
-		dur: 14,
-		Contenido: PlanoCampo,
-		rotulo: 'Se cierra con evidencia',
-		locucion: [
-			{t: 'El técnico la ejecuta:', de: 0.4, a: 3},
-			{t: 'marca sus tareas, captura lecturas,', de: 3.1, a: 7.5},
-			{t: 'sube la foto y firma.', de: 7.6, a: 13.6},
-		],
-	},
-	{
-		id: 'validacion',
-		dur: 8,
-		Contenido: PlanoValidacionVerde,
-		rotulo: 'El supervisor valida',
-		locucion: [
-			{t: 'Y no se cierra sola:', de: 0.4, a: 3.2},
-			{t: 'el supervisor valida o rechaza.', de: 3.3, a: 7.8},
-		],
-	},
-	{
-		id: 'calendario',
-		dur: 10,
-		Contenido: Plano9,
-		rotulo: 'Lo repetitivo, programado',
-		locucion: [
-			{t: 'Paso 3. Lo que se repite, se programa.', de: 0.4, a: 5},
-			{t: 'El sistema genera las órdenes solo.', de: 5.1, a: 9.8},
-		],
-	},
-	{
-		id: 'whatsapp',
-		dur: 8,
-		Contenido: PlanoWhatsApp,
-		rotulo: 'Avisos por WhatsApp, historial aquí',
-		locucion: [
-			{t: 'Tu equipo sigue en WhatsApp.', de: 0.3, a: 3},
-			{t: 'El historial, las órdenes y la evidencia viven aquí.', de: 3.1, a: 7.8},
-		],
-	},
-	{
-		id: 'cierre',
-		dur: 9,
-		Contenido: PlanoCierre,
-		rotulo: '',
-		locucion: [
-			{t: 'Ordena el mantenimiento de tu club.', de: 0.5, a: 4.2},
-			{t: 'Elige tu plan y activa tu cuenta hoy.', de: 4.3, a: 8.8},
-		],
-	},
+	{id: 'caos', dur: 7, Contenido: P1Caos},
+	{id: 'tablero', dur: 7, Contenido: P2Reveal},
+	{id: 'organiza', dur: 12, Contenido: P3Organiza},
+	{id: 'detalle', dur: 8, Contenido: P4Detalle},
+	{id: 'reporta', dur: 12, Contenido: P5Reporta},
+	{id: 'orden', dur: 10, Contenido: P6Orden},
+	{id: 'campo', dur: 14, Contenido: P7Campo},
+	{id: 'seguimiento', dur: 8, Contenido: P8Seguimiento},
+	{id: 'programa', dur: 10, Contenido: P9Programa},
+	{id: 'whatsapp', dur: 8, Contenido: P10WhatsApp},
+	{id: 'cierre', dur: 9, Contenido: P11Cierre},
 ];
 
 export const DURACION_SITIO = PLANOS.reduce((a, p) => a + s(p.dur), 0);
