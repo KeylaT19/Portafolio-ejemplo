@@ -5,10 +5,11 @@
   "description": "Videos comerciales de GC GMAO hechos con Remotion",
   "scripts": {
     "dev": "remotion studio",
-    "render:sitio": "remotion render SitioWeb out/gcgmao-sitio.mp4 --codec=h264 --crf=20",
+    "render:sitio": "remotion render SitioWeb out/gcgmao-sitio.mp4 --codec=h264 --crf=23",
     "render:sitio-mudo": "remotion render SitioWebMudo out/gcgmao-sitio-mudo.mp4 --codec=h264 --crf=22",
     "render:reel": "remotion render Reel out/gcgmao-reel.mp4 --codec=h264 --crf=22",
-    "render:todo": "npm run render:sitio && npm run render:sitio-mudo && npm run render:reel"
+    "render:todo": "npm run render:sitio && npm run render:sitio-mudo && npm run render:reel",
+    "comprimir:sitio": "ffmpeg -y -i out/gcgmao-sitio.mp4 -c:v libx264 -b:v 580k -preset slow -pass 1 -an -f null /dev/null && ffmpeg -y -i out/gcgmao-sitio.mp4 -c:v libx264 -b:v 580k -preset slow -pass 2 -profile:v high -pix_fmt yuv420p -movflags +faststart -an out/gcgmao-sitio-landing.mp4"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "5.2.5",
