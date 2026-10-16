@@ -114,3 +114,81 @@ export const PantallaReal: React.FC<{
 		</AbsoluteFill>
 	);
 };
+
+/** Grabación o captura real completa (sin zoom), centrada en el lienzo de 1440×900 del monitor. */
+export const PantallaCompleta: React.FC<{src: string; ancho: number; alto: number; video?: boolean; desde?: number; velocidad?: number; fondo?: string}> = ({
+	src,
+	ancho,
+	alto,
+	video,
+	desde = 0,
+	velocidad = 1,
+	fondo = '#f3f3f3',
+}) => {
+	const {fps} = useVideoConfig();
+	const esc = 1440 / ancho;
+	const estilo: React.CSSProperties = {position: 'absolute', left: 0, top: (900 - alto * esc) / 2, width: 1440, height: alto * esc};
+	return (
+		<AbsoluteFill style={{width: 1440, height: 900, background: fondo}}>
+			{video ? (
+				<OffthreadVideo src={staticFile(src)} startFrom={Math.round(desde * fps)} playbackRate={velocidad} muted style={estilo} />
+			) : (
+				<Img src={staticFile(src)} style={estilo} />
+			)}
+		</AbsoluteFill>
+	);
+};
+
+/**
+ * Ventana de navegador con la proporción exacta de la fuente: la pantalla real se ve completa.
+ * `children` se dibuja en coordenadas de la fuente (para el cursor).
+ */
+export const VentanaApp: React.FC<{
+	src: string;
+	ancho: number;
+	alto: number;
+	video?: boolean;
+	desde?: number;
+	velocidad?: number;
+	anchoVista?: number; // ancho en pantalla
+	rotY?: number;
+	children?: React.ReactNode;
+}> = ({src, ancho, alto, video, desde = 0, velocidad = 1, anchoVista = 1160, rotY = 0, children}) => {
+	const frame = useCurrentFrame();
+	const {fps, durationInFrames} = useVideoConfig();
+	const esc = anchoVista / ancho;
+	const empuje = interpolate(frame, [0, durationInFrames], [1, 1.03]);
+	return (
+		<div style={{perspective: 2600}}>
+			<div
+				style={{
+					width: anchoVista,
+					borderRadius: 16,
+					overflow: 'hidden',
+					background: '#fff',
+					boxShadow: '0 40px 90px rgba(0,10,30,.55), 0 0 0 1px rgba(255,255,255,.18)',
+					transform: `rotateY(${rotY}deg) scale(${empuje})`,
+				}}
+			>
+				<div style={{height: 38, background: '#e9edf3', display: 'flex', alignItems: 'center', gap: 8, padding: '0 16px'}}>
+					{['#ff5f57', '#febc2e', '#28c840'].map((col) => (
+						<span key={col} style={{width: 12, height: 12, borderRadius: '50%', background: col}} />
+					))}
+					<div style={{marginLeft: 16, flex: 1, maxWidth: 420, height: 24, borderRadius: 12, background: '#fff', display: 'flex', alignItems: 'center', padding: '0 14px', fontSize: 13, color: '#45556c', fontFamily: 'Poppins, sans-serif'}}>
+						🔒 GC GMAO
+					</div>
+				</div>
+				<div style={{width: anchoVista, height: alto * esc, position: 'relative', overflow: 'hidden'}}>
+					<div style={{position: 'absolute', left: 0, top: 0, width: ancho, height: alto, transformOrigin: '0 0', transform: `scale(${esc})`}}>
+						{video ? (
+							<OffthreadVideo src={staticFile(src)} startFrom={Math.round(desde * fps)} playbackRate={velocidad} muted style={{width: ancho, height: alto}} />
+						) : (
+							<Img src={staticFile(src)} style={{width: ancho, height: alto}} />
+						)}
+						{children}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};

@@ -1,9 +1,9 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, Sequence, interpolate, staticFile, useCurrentFrame, Easing} from 'remotion';
 import {c, fuente, s} from './tema';
-import {Barrido, Celular, Cursor, Escena, EtiquetaPaso, Folio, Fondo, Laptop, Logo, TextoCinetico, useEntrada, useTramo} from './componentes/base';
+import {Barrido, Celular, Cursor, Escena, EtiquetaPaso, Folio, Fondo, Logo, TextoCinetico, useEntrada, useTramo} from './componentes/base';
 import {ChatCaos} from './ui/movil';
-import {ClipFondo, MonitorVerde, PantallaReal, Ventana} from './componentes/clips';
+import {ClipFondo, MonitorVerde, PantallaCompleta, VentanaApp} from './componentes/clips';
 
 /*
  * Video del sitio (guion A, 1:45). Sin voz: música y textos.
@@ -183,7 +183,14 @@ const MovilReal: React.FC<{src: string; ancho: number; alto: number; escala: num
 	);
 };
 
-const v = (f: number, x: number, y: number, w: number): Ventana => ({f, x, y, w});
+
+/** Espacio fijo para alternar ventanas dentro de un DisenoPaso. */
+const Caja: React.FC<{children: React.ReactNode}> = ({children}) => <div style={{width: 1180, height: 660, position: 'relative'}}>{children}</div>;
+
+/** Centra un elemento dentro de una parte de Tramos. */
+const Centro: React.FC<{children: React.ReactNode}> = ({children}) => (
+	<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>{children}</AbsoluteFill>
+);
 
 // ───────────────────────── Planos ─────────────────────────
 
@@ -218,20 +225,20 @@ const P1Caos: React.FC = () => (
 
 const P2Reveal: React.FC = () => (
 	<PlanoMonitor desde={0} titular="Todo tu mantenimiento en un solo lugar." resaltar={['solo', 'lugar']} logo>
-		<PantallaReal {...G2} desde={0.3} ventanas={[v(0, 0, 0, 970), v(70, 0, 0, 970), v(150, 406, 0, 970)]} />
+		<PantallaCompleta {...G2} desde={0.3} />
 	</PlanoMonitor>
 );
 
 const P3Organiza: React.FC = () => (
 	<DisenoPaso numero={1} etiqueta="Paso 1 — Organiza" titular="Tus instalaciones, zonas y activos." resaltar={['zonas', 'activos']} bajada="Cada uno con su historial de incidencias y órdenes.">
-		<Laptop ancho={1180} rotY={-8}>
-			<Tramos
-				partes={[
-					{seg: 6.8, el: <PantallaReal {...G1} desde={0.5} ventanas={[v(0, 0, 0, 970), v(204, 406, 0, 970)]} />},
-					{seg: 5.2, el: <PantallaReal {...G1} desde={17.2} ventanas={[v(0, 120, 0, 970), v(156, 300, 0, 970)]} />},
-				]}
-			/>
-		</Laptop>
+		<Caja>
+		<Tramos
+			partes={[
+				{seg: 6.8, el: <Centro><VentanaApp {...G1} desde={0.5} rotY={-6} /></Centro>},
+				{seg: 5.2, el: <Centro><VentanaApp {...G1} desde={17.2} rotY={-6} /></Centro>},
+			]}
+		/>
+		</Caja>
 	</DisenoPaso>
 );
 
@@ -247,14 +254,14 @@ const P4Detalle: React.FC = () => (
 			</Sequence>
 		}
 	>
-		<Laptop ancho={1180} rotY={8}>
-			<Tramos
-				partes={[
-					{seg: 2.4, el: <PantallaReal {...G1} desde={22.4} ventanas={[v(0, 200, 0, 970)]} />},
-					{seg: 5.6, el: <PantallaReal {...UBICACION} ventanas={[v(0, 0, 0, 878), v(168, 120, 0, 878)]} />},
-				]}
-			/>
-		</Laptop>
+		<Caja>
+		<Tramos
+			partes={[
+				{seg: 2.4, el: <Centro><VentanaApp {...G1} desde={22.4} rotY={6} /></Centro>},
+				{seg: 5.6, el: <Centro><VentanaApp {...UBICACION} rotY={6} /></Centro>},
+			]}
+		/>
+		</Caja>
 	</DisenoPaso>
 );
 
@@ -266,18 +273,16 @@ const P5Reporta: React.FC = () => (
 				seg: 8.5,
 				el: (
 					<DisenoPaso numero={2} etiqueta="Paso 2 — Reporta" titular="Cada falla queda reportada." resaltar={['reportada']} bajada="Pendientes, abiertas y cerradas, con su importancia.">
-						<Laptop ancho={1180} rotY={-8}>
-							<PantallaReal {...INCIDENCIAS} ventanas={[v(0, 0, 0, 934), v(240, 222, 0, 934)]}>
-								<Cursor
-									puntos={[
-										{f: 0, x: 900, y: 700},
-										{f: 60, x: 250, y: 270, clic: true},
-										{f: 120, x: 600, y: 470},
-										{f: 200, x: 1180, y: 520},
-									]}
-								/>
-							</PantallaReal>
-						</Laptop>
+						<VentanaApp {...INCIDENCIAS} rotY={-6}>
+							<Cursor
+								puntos={[
+									{f: 0, x: 700, y: 560},
+									{f: 60, x: 290, y: 178, clic: true},
+									{f: 130, x: 520, y: 370},
+									{f: 220, x: 1050, y: 412},
+								]}
+							/>
+						</VentanaApp>
 					</DisenoPaso>
 				),
 			},
@@ -298,19 +303,17 @@ const P6Orden: React.FC = () => (
 			</Sequence>
 		}
 	>
-		<Laptop ancho={1180} rotY={8}>
-			<PantallaReal {...NUEVA_OT} ventanas={[v(0, 60, 0, 1000), v(150, 143, 0, 925)]}>
-				<Cursor
-					puntos={[
-						{f: 0, x: 1200, y: 800},
-						{f: 50, x: 716, y: 439, clic: true},
-						{f: 120, x: 600, y: 560},
-						{f: 200, x: 778, y: 713, clic: true},
-						{f: 300, x: 1000, y: 820},
-					]}
-				/>
-			</PantallaReal>
-		</Laptop>
+		<VentanaApp {...NUEVA_OT} rotY={6}>
+			<Cursor
+				puntos={[
+					{f: 0, x: 1000, y: 540},
+					{f: 50, x: 640, y: 282, clic: true},
+					{f: 110, x: 520, y: 345, clic: true},
+					{f: 190, x: 643, y: 458, clic: true},
+					{f: 300, x: 900, y: 520},
+				]}
+			/>
+		</VentanaApp>
 	</DisenoPaso>
 );
 
@@ -333,24 +336,23 @@ const P7Campo: React.FC = () => (
 
 const P8Seguimiento: React.FC = () => (
 	<PlanoMonitor desde={5} etiqueta="Seguimiento" titular="Cada orden, su estado y quién la atiende." resaltar={['estado']}>
-		<PantallaReal {...G2} desde={10.5} velocidad={0.75} ventanas={[v(0, 0, 0, 970), v(240, 300, 0, 970)]} />
+		<PantallaCompleta {...G2} desde={10.5} velocidad={0.75} />
 	</PlanoMonitor>
 );
 
 const P9Programa: React.FC = () => (
 	<DisenoPaso numero={3} etiqueta="Paso 3 — Programa" titular="Lo que se repite, se programa." resaltar={['programa']} bajada="Vista por semana, mes, trimestre, semestre o año.">
-		<Laptop ancho={1180} rotY={-8}>
-			<PantallaReal {...CALENDARIO} ventanas={[v(0, 0, 0, 925), v(150, 222, 0, 925), v(300, 222, 0, 700)]}>
-				<Cursor
-					puntos={[
-						{f: 0, x: 900, y: 750},
-						{f: 90, x: 780, y: 220},
-						{f: 200, x: 1150, y: 230},
-						{f: 300, x: 1000, y: 500},
-					]}
-				/>
-			</PantallaReal>
-		</Laptop>
+		<VentanaApp {...CALENDARIO} rotY={-6}>
+			<Cursor
+				puntos={[
+					{f: 0, x: 700, y: 520},
+					{f: 80, x: 680, y: 131},
+					{f: 160, x: 740, y: 131},
+					{f: 240, x: 860, y: 131},
+					{f: 300, x: 640, y: 380},
+				]}
+			/>
+		</VentanaApp>
 	</DisenoPaso>
 );
 
@@ -362,9 +364,7 @@ const P10WhatsApp: React.FC = () => (
 				seg: 5,
 				el: (
 					<DisenoPaso lado="der" etiqueta="WhatsApp sí. Caos no." titular="El historial vive aquí." resaltar={['historial']} bajada="Indicadores, gráficas y registros al día.">
-						<Laptop ancho={1180} rotY={8}>
-							<PantallaReal {...G2} desde={6.5} ventanas={[v(0, 200, 0, 970)]} />
-						</Laptop>
+						<VentanaApp {...G2} desde={6.5} rotY={6} />
 					</DisenoPaso>
 				),
 			},
