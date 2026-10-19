@@ -16,7 +16,27 @@ export type PropsSitio = {
 	musica?: string;
 	/** Segundo de la pista en que arranca el video (alinea el remate final con el cierre). */
 	inicioMusica?: number;
+	/** Versión con locución: voz de public/audio/locucion-*.mp3 y música más baja. */
+	conVoz?: boolean;
 };
+
+/**
+ * Frases de la locución (guion A) colocadas al inicio de cada escena.
+ * archivo / de / a: tramo del audio en segundos; en: segundo del video en que suena.
+ */
+const LOCUCION: {archivo: string; de: number; a: number; en: number}[] = [
+	{archivo: 'locucion-1.mp3', de: 0, a: 8.0, en: 0.2}, // ¿Dónde está el historial…? …es que no existe.
+	{archivo: 'locucion-1.mp3', de: 8.1, a: 14.4, en: 7.9}, // Esto es GC GMAO. Un solo lugar…
+	{archivo: 'locucion-1.mp3', de: 14.45, a: 23.35, en: 14.5}, // Paso 1. Organizas… código QR.
+	{archivo: 'locucion-1.mp3', de: 23.35, a: 30.2, en: 26.4}, // Marca, modelo, garantía… puede citar.
+	{archivo: 'locucion-1.mp3', de: 30.25, a: 35.19, en: 34.6}, // Paso 2. Quien detecta la falla…
+	{archivo: 'locucion-2.mp3', de: 0, a: 6.0, en: 46.5}, // El supervisor la convierte… Nace con folio.
+	{archivo: 'locucion-2.mp3', de: 6.1, a: 12.4, en: 56.6}, // El técnico la ejecuta… sube la foto y firma.
+	{archivo: 'locucion-2.mp3', de: 12.45, a: 16.4, en: 70.5}, // Y no se cierra sola: el supervisor valida…
+	{archivo: 'locucion-2.mp3', de: 16.5, a: 22.4, en: 78.5}, // Paso 3. Lo que se repite, se programa…
+	{archivo: 'locucion-2.mp3', de: 22.45, a: 27.8, en: 88.4}, // Tu equipo sigue en WhatsApp…
+	{archivo: 'locucion-2.mp3', de: 27.9, a: 32.97, en: 98.9}, // Ordena el mantenimiento… activa tu cuenta hoy.
+];
 
 type Plano = {id: string; dur: number; Contenido: React.FC};
 
@@ -29,6 +49,8 @@ const UBICACION = {src: 'sistema/ubicacion.png', ancho: 1052, alto: 549};
 const CALENDARIO = {src: 'sistema/calendario.png', ancho: 1147, alto: 578};
 const OT_MOVIL = {src: 'sistema/ot-movil.png', ancho: 490, alto: 591};
 const DASHBOARD = {src: 'sistema/dashboard.png', ancho: 1112, alto: 593};
+const DASH_GRAFICAS = {src: 'sistema/dashboard-graficas.png', ancho: 1035, alto: 593};
+const DASH_GRAFICAS_ANCHO = {src: 'sistema/dashboard-graficas-ancho.png', ancho: 1188, alto: 593};
 
 // ───────────────────────── Piezas de composición ─────────────────────────
 
@@ -195,7 +217,7 @@ const P1Caos: React.FC = () => (
 
 const P2Reveal: React.FC = () => (
 	<PlanoMonitor desde={0} titular="Todo tu mantenimiento en un solo lugar." resaltar={['solo', 'lugar']}>
-		<PantallaCompleta {...G2} desde={0.3} />
+		<PantallaCompleta {...DASH_GRAFICAS} />
 	</PlanoMonitor>
 );
 
@@ -308,7 +330,12 @@ const P7Campo: React.FC = () => (
 
 const P8Seguimiento: React.FC = () => (
 	<PlanoMonitor desde={5} etiqueta="Seguimiento" titular="Cada orden, su estado y quién la atiende." resaltar={['estado']}>
-		<PantallaCompleta {...DASHBOARD} />
+		<Sequence durationInFrames={s(4)}>
+			<PantallaCompleta {...DASH_GRAFICAS_ANCHO} />
+		</Sequence>
+		<Sequence from={s(4)}>
+			<PantallaCompleta {...DASHBOARD} />
+		</Sequence>
 	</PlanoMonitor>
 );
 
@@ -459,7 +486,8 @@ const LogoEsquina: React.FC = () => {
 	);
 };
 
-export const SitioWeb: React.FC<PropsSitio> = ({musica, inicioMusica = 0}) => {
+export const SitioWeb: React.FC<PropsSitio> = ({musica, inicioMusica = 0, conVoz = false}) => {
+	const volMusica = conVoz ? 0.18 : 0.9;
 	let desde = 0;
 	const cortes: number[] = [];
 	return (
@@ -485,9 +513,15 @@ export const SitioWeb: React.FC<PropsSitio> = ({musica, inicioMusica = 0}) => {
 				<Audio
 					src={staticFile(`audio/${musica}`)}
 					startFrom={s(inicioMusica)}
-					volume={(f) => interpolate(f, [0, 8, DURACION_SITIO - 10, DURACION_SITIO], [0, 0.9, 0.9, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}
+					volume={(f) => interpolate(f, [0, 8, DURACION_SITIO - 10, DURACION_SITIO], [0, volMusica, volMusica, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}
 				/>
 			)}
+			{conVoz &&
+				LOCUCION.map((l, i) => (
+					<Sequence key={i} from={s(l.en)} durationInFrames={s(l.a - l.de) + 2} name={`voz ${i + 1}`}>
+						<Audio src={staticFile(`audio/${l.archivo}`)} startFrom={s(l.de)} endAt={s(l.a)} volume={1} />
+					</Sequence>
+				))}
 		</AbsoluteFill>
 	);
 };
