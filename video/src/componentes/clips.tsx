@@ -47,7 +47,7 @@ export const ClipFondo: React.FC<{
  * con la perspectiva medida cuadro por cuadro (src/ui/esquinas-monitor.json, a 25 fps).
  * Cuando llegue la grabación real del sistema, `children` pasa a ser un <OffthreadVideo>.
  */
-export const MonitorVerde: React.FC<{desde?: number; empuje?: number; children: React.ReactNode}> = ({desde = 0, empuje = 0.06, children}) => {
+export const MonitorVerde: React.FC<{desde?: number; empuje?: number; children: React.ReactNode}> = ({desde = 0, empuje = 0, children}) => {
 	const frame = useCurrentFrame();
 	const {fps, durationInFrames} = useVideoConfig();
 	const lista = esquinasMonitor as (P[] | null)[];
@@ -75,46 +75,6 @@ export const MonitorVerde: React.FC<{desde?: number; empuje?: number; children: 
 	);
 };
 
-export type Ventana = {f: number; x: number; y: number; w: number};
-
-/**
- * Grabación o captura real del sistema dibujada en un lienzo de 1440×900 (el de Laptop y MonitorVerde).
- * `ventanas` recorta un área de la fuente (en píxeles de la fuente) y la anima: zoom y paneo.
- */
-export const PantallaReal: React.FC<{
-	src: string; // ruta dentro de public/
-	ancho: number; // tamaño de la fuente en píxeles
-	alto: number;
-	video?: boolean;
-	desde?: number; // segundos dentro de la grabación
-	velocidad?: number;
-	ventanas: Ventana[];
-	children?: React.ReactNode;
-}> = ({src, ancho, alto, video, desde = 0, velocidad = 1, ventanas, children}) => {
-	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
-	const fs = ventanas.map((v) => v.f);
-	const val = (k: 'x' | 'y' | 'w') =>
-		ventanas.length === 1
-			? ventanas[0][k]
-			: interpolate(frame, fs, ventanas.map((v) => v[k]), {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: (t) => t * t * (3 - 2 * t)});
-	const w = val('w');
-	const esc = 1440 / w;
-	const x = val('x');
-	const y = Math.min(val('y'), Math.max(0, alto - 900 / esc));
-	const estilo: React.CSSProperties = {position: 'absolute', left: 0, top: 0, width: ancho, height: alto, transformOrigin: '0 0', transform: `scale(${esc}) translate(${-x}px, ${-y}px)`};
-	return (
-		<AbsoluteFill style={{width: 1440, height: 900, background: '#eef1f5', overflow: 'hidden'}}>
-			{video ? (
-				<OffthreadVideo src={staticFile(src)} startFrom={Math.round(desde * fps)} playbackRate={velocidad} muted style={estilo} />
-			) : (
-				<Img src={staticFile(src)} style={estilo} />
-			)}
-			{children}
-		</AbsoluteFill>
-	);
-};
-
 /** Grabación o captura real completa (sin zoom), centrada en el lienzo de 1440×900 del monitor. */
 export const PantallaCompleta: React.FC<{src: string; ancho: number; alto: number; video?: boolean; desde?: number; velocidad?: number; fondo?: string}> = ({
 	src,
@@ -136,60 +96,6 @@ export const PantallaCompleta: React.FC<{src: string; ancho: number; alto: numbe
 				<Img src={staticFile(src)} style={estilo} />
 			)}
 		</AbsoluteFill>
-	);
-};
-
-/**
- * Ventana de navegador con la proporción exacta de la fuente: la pantalla real se ve completa.
- * `children` se dibuja en coordenadas de la fuente (para el cursor).
- */
-export const VentanaApp: React.FC<{
-	src: string;
-	ancho: number;
-	alto: number;
-	video?: boolean;
-	desde?: number;
-	velocidad?: number;
-	anchoVista?: number; // ancho en pantalla
-	rotY?: number;
-	children?: React.ReactNode;
-}> = ({src, ancho, alto, video, desde = 0, velocidad = 1, anchoVista = 1160, rotY = 0, children}) => {
-	const frame = useCurrentFrame();
-	const {fps, durationInFrames} = useVideoConfig();
-	const esc = anchoVista / ancho;
-	const empuje = interpolate(frame, [0, durationInFrames], [1, 1.03]);
-	return (
-		<div style={{perspective: 2600}}>
-			<div
-				style={{
-					width: anchoVista,
-					borderRadius: 16,
-					overflow: 'hidden',
-					background: '#fff',
-					boxShadow: '0 40px 90px rgba(0,10,30,.55), 0 0 0 1px rgba(255,255,255,.18)',
-					transform: `rotateY(${rotY}deg) scale(${empuje})`,
-				}}
-			>
-				<div style={{height: 38, background: '#e9edf3', display: 'flex', alignItems: 'center', gap: 8, padding: '0 16px'}}>
-					{['#ff5f57', '#febc2e', '#28c840'].map((col) => (
-						<span key={col} style={{width: 12, height: 12, borderRadius: '50%', background: col}} />
-					))}
-					<div style={{marginLeft: 16, flex: 1, maxWidth: 420, height: 24, borderRadius: 12, background: '#fff', display: 'flex', alignItems: 'center', padding: '0 14px', fontSize: 13, color: '#45556c', fontFamily: 'Poppins, sans-serif'}}>
-						🔒 GC GMAO
-					</div>
-				</div>
-				<div style={{width: anchoVista, height: alto * esc, position: 'relative', overflow: 'hidden'}}>
-					<div style={{position: 'absolute', left: 0, top: 0, width: ancho, height: alto, transformOrigin: '0 0', transform: `scale(${esc})`}}>
-						{video ? (
-							<OffthreadVideo src={staticFile(src)} startFrom={Math.round(desde * fps)} playbackRate={velocidad} muted style={{width: ancho, height: alto}} />
-						) : (
-							<Img src={staticFile(src)} style={{width: ancho, height: alto}} />
-						)}
-						{children}
-					</div>
-				</div>
-			</div>
-		</div>
 	);
 };
 
@@ -243,15 +149,12 @@ export const MonitorReal: React.FC<{
 	fondo?: string;
 	children?: React.ReactNode;
 }> = ({anchoVista = 1100, fondo = '#f3f3f3', children, ...f}) => {
-	const frame = useCurrentFrame();
-	const {durationInFrames} = useVideoConfig();
 	const k = anchoVista / MONITOR.ancho;
 	const p = MONITOR.pantalla;
-	const empuje = interpolate(frame, [0, durationInFrames], [1, 1.025]);
 	const escFuente = escalaAjuste(f.ancho, f.alto, p.w * k, p.h * k);
 	const izq = (p.w * k - f.ancho * escFuente) / 2;
 	return (
-		<div style={{position: 'relative', width: anchoVista, height: MONITOR.alto * k, transform: `scale(${empuje})`, filter: 'drop-shadow(0 40px 60px rgba(0,10,30,.5))'}}>
+		<div style={{position: 'relative', width: anchoVista, height: MONITOR.alto * k, filter: 'drop-shadow(0 40px 60px rgba(0,10,30,.5))'}}>
 			<div style={{position: 'absolute', left: p.x * k, top: p.y * k, width: p.w * k, height: p.h * k, overflow: 'hidden'}}>
 				<Contenido {...f} w={p.w * k} h={p.h * k} fondo={fondo} />
 				{children && (

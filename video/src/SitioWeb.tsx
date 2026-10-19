@@ -41,7 +41,7 @@ const DisenoPaso: React.FC<{
 	lado?: 'izq' | 'der';
 	extra?: React.ReactNode;
 }> = ({numero, etiqueta, titular, resaltar, bajada, children, lado = 'izq', extra}) => {
-	const v = useEntrada(4, {damping: 15, mass: 0.9});
+	const v = useTramo(0, 12);
 	const texto = (
 		<div style={{width: 540, flexShrink: 0}}>
 			<EtiquetaPaso numero={numero} texto={etiqueta} />
@@ -56,7 +56,8 @@ const DisenoPaso: React.FC<{
 			{extra && <div style={{marginTop: 36}}>{extra}</div>}
 		</div>
 	);
-	const disp = <div style={{transform: `translateX(${(1 - v) * (lado === 'izq' ? 300 : -300)}px)`, opacity: v}}>{children}</div>;
+	// Sin desplazamiento ni rebote: la pantalla queda fija y solo aparece con un fundido.
+	const disp = <div style={{opacity: Math.min(1, v)}}>{children}</div>;
 	return (
 		<Fondo>
 			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 70, padding: '0 70px'}}>
@@ -171,11 +172,10 @@ const Centro: React.FC<{children: React.ReactNode}> = ({children}) => (
 // ───────────────────────── Planos ─────────────────────────
 
 const ChatPlano: React.FC = () => {
-	const sacude = Math.sin(useCurrentFrame() * 1.3) * 1.2;
 	return (
 		<Fondo variante="cierre">
 			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '0 150px', gap: 120}}>
-				<div style={{transform: `rotate(${sacude - 4}deg)`}}>
+				<div>
 					<CelularMarco altoVista={940}>
 						<ChatCaos />
 					</CelularMarco>
@@ -301,7 +301,7 @@ const P7Campo: React.FC = () => (
 				seg: 6,
 				el: (
 					<DisenoPaso numero={undefined} etiqueta="Desde el celular" titular="Inicia, pausa y finaliza cada orden." resaltar={['finaliza']} bajada="Sin papeles ni chats de por medio.">
-						<CelularMarco altoVista={940} rot={-3}>
+						<CelularMarco altoVista={940}>
 							<CapturaMovil {...OT_MOVIL} corteBarra={540} />
 						</CelularMarco>
 					</DisenoPaso>

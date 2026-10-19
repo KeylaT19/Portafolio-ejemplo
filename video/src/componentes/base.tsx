@@ -497,8 +497,7 @@ export const Escena: React.FC<{dur: number; children: React.ReactNode; sinSalida
 	const frame = useCurrentFrame();
 	const entrada = interpolate(frame, [0, 8], [0, 1], {extrapolateRight: 'clamp'});
 	const salida = sinSalida ? 1 : interpolate(frame, [dur - 6, dur], [1, 0], {extrapolateLeft: 'clamp'});
-	const escala = interpolate(frame, [0, dur], [1.0, 1.035]);
 	return (
-		<AbsoluteFill style={{opacity: Math.min(entrada, salida), transform: `scale(${escala})`}}>{children}</AbsoluteFill>
+		<AbsoluteFill style={{opacity: Math.min(entrada, salida)}}>{children}</AbsoluteFill>
 	);
 };
