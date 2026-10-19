@@ -28,6 +28,7 @@ const NUEVA_OT = {src: 'sistema/nueva-ot.png', ancho: 1211, alto: 578};
 const UBICACION = {src: 'sistema/ubicacion.png', ancho: 1052, alto: 549};
 const CALENDARIO = {src: 'sistema/calendario.png', ancho: 1147, alto: 578};
 const OT_MOVIL = {src: 'sistema/ot-movil.png', ancho: 490, alto: 591};
+const DASHBOARD = {src: 'sistema/dashboard.png', ancho: 1112, alto: 593};
 
 // ───────────────────────── Piezas de composición ─────────────────────────
 
@@ -307,7 +308,7 @@ const P7Campo: React.FC = () => (
 
 const P8Seguimiento: React.FC = () => (
 	<PlanoMonitor desde={5} etiqueta="Seguimiento" titular="Cada orden, su estado y quién la atiende." resaltar={['estado']}>
-		<PantallaCompleta {...G2} desde={10.5} velocidad={0.75} />
+		<PantallaCompleta {...DASHBOARD} />
 	</PlanoMonitor>
 );
 
