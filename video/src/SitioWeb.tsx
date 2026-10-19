@@ -1,9 +1,9 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Img, Sequence, interpolate, staticFile, useCurrentFrame, Easing} from 'remotion';
 import {c, fuente, s} from './tema';
-import {Barrido, Celular, Cursor, Escena, EtiquetaPaso, Folio, Fondo, Logo, TextoCinetico, useEntrada, useTramo} from './componentes/base';
+import {Barrido, Cursor, Escena, EtiquetaPaso, Folio, Fondo, Logo, TextoCinetico, useEntrada, useTramo} from './componentes/base';
 import {ChatCaos} from './ui/movil';
-import {ClipFondo, MonitorVerde, PantallaCompleta, VentanaApp} from './componentes/clips';
+import {CapturaMovil, CelularMarco, ClipFondo, MonitorReal, MonitorVerde, PantallaCompleta} from './componentes/clips';
 
 /*
  * Video del sitio (guion A, 1:45). Sin voz: música y textos.
@@ -160,32 +160,8 @@ const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]
 	);
 };
 
-/** Vista móvil real (captura) en un marco de celular con la proporción de la captura. */
-const MovilReal: React.FC<{src: string; ancho: number; alto: number; escala: number; rot?: number; recorrido?: number}> = ({src, ancho, alto, escala, rot = 0, recorrido = 0}) => {
-	const f = useCurrentFrame();
-	const v = useEntrada(0, {damping: 14, mass: 0.8});
-	const sube = interpolate(f, [20, 150], [0, recorrido], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic)});
-	return (
-		<div
-			style={{
-				padding: 16,
-				borderRadius: 54,
-				background: 'linear-gradient(145deg, #1f2937, #0b1220)',
-				boxShadow: '0 50px 100px rgba(0,10,30,.6), 0 0 0 2px rgba(255,255,255,.12) inset',
-				transform: `rotate(${rot}deg) translateY(${(1 - v) * 200}px)`,
-				opacity: v,
-			}}
-		>
-			<div style={{width: ancho * escala, height: alto * escala, borderRadius: 40, overflow: 'hidden', background: '#fff'}}>
-				<Img src={staticFile(src)} style={{width: ancho * escala, height: alto * escala, transform: `translateY(${-sube}px)`}} />
-			</div>
-		</div>
-	);
-};
-
-
 /** Espacio fijo para alternar ventanas dentro de un DisenoPaso. */
-const Caja: React.FC<{children: React.ReactNode}> = ({children}) => <div style={{width: 1180, height: 660, position: 'relative'}}>{children}</div>;
+const Caja: React.FC<{children: React.ReactNode}> = ({children}) => <div style={{width: 1100, height: 980, position: 'relative'}}>{children}</div>;
 
 /** Centra un elemento dentro de una parte de Tramos. */
 const Centro: React.FC<{children: React.ReactNode}> = ({children}) => (
@@ -200,9 +176,9 @@ const ChatPlano: React.FC = () => {
 		<Fondo variante="cierre">
 			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '0 150px', gap: 120}}>
 				<div style={{transform: `rotate(${sacude - 4}deg)`}}>
-					<Celular escala={0.98}>
+					<CelularMarco altoVista={940}>
 						<ChatCaos />
-					</Celular>
+					</CelularMarco>
 				</div>
 				<div style={{flex: 1}}>
 					<EtiquetaPaso texto="El problema" />
@@ -234,8 +210,8 @@ const P3Organiza: React.FC = () => (
 		<Caja>
 		<Tramos
 			partes={[
-				{seg: 6.8, el: <Centro><VentanaApp {...G1} desde={0.5} rotY={-6} /></Centro>},
-				{seg: 5.2, el: <Centro><VentanaApp {...G1} desde={17.2} rotY={-6} /></Centro>},
+				{seg: 6.8, el: <Centro><MonitorReal {...G1} desde={0.5} /></Centro>},
+				{seg: 5.2, el: <Centro><MonitorReal {...G1} desde={17.2} /></Centro>},
 			]}
 		/>
 		</Caja>
@@ -257,8 +233,8 @@ const P4Detalle: React.FC = () => (
 		<Caja>
 		<Tramos
 			partes={[
-				{seg: 2.4, el: <Centro><VentanaApp {...G1} desde={22.4} rotY={6} /></Centro>},
-				{seg: 5.6, el: <Centro><VentanaApp {...UBICACION} rotY={6} /></Centro>},
+				{seg: 2.4, el: <Centro><MonitorReal {...G1} desde={22.4} /></Centro>},
+				{seg: 5.6, el: <Centro><MonitorReal {...UBICACION} /></Centro>},
 			]}
 		/>
 		</Caja>
@@ -273,7 +249,7 @@ const P5Reporta: React.FC = () => (
 				seg: 8.5,
 				el: (
 					<DisenoPaso numero={2} etiqueta="Paso 2 — Reporta" titular="Cada falla queda reportada." resaltar={['reportada']} bajada="Pendientes, abiertas y cerradas, con su importancia.">
-						<VentanaApp {...INCIDENCIAS} rotY={-6}>
+						<MonitorReal {...INCIDENCIAS}>
 							<Cursor
 								puntos={[
 									{f: 0, x: 700, y: 560},
@@ -282,7 +258,7 @@ const P5Reporta: React.FC = () => (
 									{f: 220, x: 1050, y: 412},
 								]}
 							/>
-						</VentanaApp>
+						</MonitorReal>
 					</DisenoPaso>
 				),
 			},
@@ -303,7 +279,7 @@ const P6Orden: React.FC = () => (
 			</Sequence>
 		}
 	>
-		<VentanaApp {...NUEVA_OT} rotY={6}>
+		<MonitorReal {...NUEVA_OT}>
 			<Cursor
 				puntos={[
 					{f: 0, x: 1000, y: 540},
@@ -313,7 +289,7 @@ const P6Orden: React.FC = () => (
 					{f: 300, x: 900, y: 520},
 				]}
 			/>
-		</VentanaApp>
+		</MonitorReal>
 	</DisenoPaso>
 );
 
@@ -325,7 +301,9 @@ const P7Campo: React.FC = () => (
 				seg: 6,
 				el: (
 					<DisenoPaso numero={undefined} etiqueta="Desde el celular" titular="Inicia, pausa y finaliza cada orden." resaltar={['finaliza']} bajada="Sin papeles ni chats de por medio.">
-						<MovilReal {...OT_MOVIL} escala={1.32} rot={-3} />
+						<CelularMarco altoVista={940} rot={-3}>
+							<CapturaMovil {...OT_MOVIL} corteBarra={540} />
+						</CelularMarco>
 					</DisenoPaso>
 				),
 			},
@@ -342,7 +320,7 @@ const P8Seguimiento: React.FC = () => (
 
 const P9Programa: React.FC = () => (
 	<DisenoPaso numero={3} etiqueta="Paso 3 — Programa" titular="Lo que se repite, se programa." resaltar={['programa']} bajada="Vista por semana, mes, trimestre, semestre o año.">
-		<VentanaApp {...CALENDARIO} rotY={-6}>
+		<MonitorReal {...CALENDARIO}>
 			<Cursor
 				puntos={[
 					{f: 0, x: 700, y: 520},
@@ -352,7 +330,7 @@ const P9Programa: React.FC = () => (
 					{f: 300, x: 640, y: 380},
 				]}
 			/>
-		</VentanaApp>
+		</MonitorReal>
 	</DisenoPaso>
 );
 
@@ -364,7 +342,7 @@ const P10WhatsApp: React.FC = () => (
 				seg: 5,
 				el: (
 					<DisenoPaso lado="der" etiqueta="WhatsApp sí. Caos no." titular="El historial vive aquí." resaltar={['historial']} bajada="Indicadores, gráficas y registros al día.">
-						<VentanaApp {...G2} desde={6.5} rotY={6} />
+						<MonitorReal {...G2} desde={6.5} />
 					</DisenoPaso>
 				),
 			},

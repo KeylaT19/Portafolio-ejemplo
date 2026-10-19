@@ -192,3 +192,104 @@ export const VentanaApp: React.FC<{
 		</div>
 	);
 };
+
+// ───────────── Marcos de dispositivo (PNG con la pantalla transparente) ─────────────
+
+const MONITOR = {src: 'marcos/monitor.png', ancho: 2000, alto: 1770, pantalla: {x: 92, y: 93, w: 1815, h: 956}};
+const CELULAR = {src: 'marcos/celular.png', ancho: 1108, alto: 2000, pantalla: {x: 174, y: 110, w: 809, h: 1752}};
+
+/** Si llenar el alto recorta menos del 6 % del ancho, se llena; si no, se ajusta al ancho (arriba). */
+const escalaAjuste = (ancho: number, alto: number, w: number, h: number) => {
+	const porAncho = w / ancho;
+	const porAlto = h / alto;
+	return porAlto > porAncho && porAncho / porAlto > 0.94 ? porAlto : porAncho;
+};
+
+/** Fuente real (grabación o captura) colocada en un área: ajusta al ancho y, si casi coincide la proporción, llena el área. */
+const Contenido: React.FC<{src: string; ancho: number; alto: number; video?: boolean; desde?: number; velocidad?: number; w: number; h: number; fondo: string}> = ({
+	src,
+	ancho,
+	alto,
+	video,
+	desde = 0,
+	velocidad = 1,
+	w,
+	h,
+	fondo,
+}) => {
+	const {fps} = useVideoConfig();
+	const esc = escalaAjuste(ancho, alto, w, h);
+	const estilo: React.CSSProperties = {position: 'absolute', left: (w - ancho * esc) / 2, top: 0, width: ancho * esc, height: alto * esc};
+	return (
+		<div style={{position: 'absolute', inset: 0, background: fondo, overflow: 'hidden'}}>
+			{video ? (
+				<OffthreadVideo src={staticFile(src)} startFrom={Math.round(desde * fps)} playbackRate={velocidad} muted style={estilo} />
+			) : (
+				<Img src={staticFile(src)} style={estilo} />
+			)}
+		</div>
+	);
+};
+
+/** Monitor de escritorio con la pantalla real del sistema detrás del marco. `children` va en coordenadas de la fuente. */
+export const MonitorReal: React.FC<{
+	src: string;
+	ancho: number;
+	alto: number;
+	video?: boolean;
+	desde?: number;
+	velocidad?: number;
+	anchoVista?: number;
+	fondo?: string;
+	children?: React.ReactNode;
+}> = ({anchoVista = 1100, fondo = '#f3f3f3', children, ...f}) => {
+	const frame = useCurrentFrame();
+	const {durationInFrames} = useVideoConfig();
+	const k = anchoVista / MONITOR.ancho;
+	const p = MONITOR.pantalla;
+	const empuje = interpolate(frame, [0, durationInFrames], [1, 1.025]);
+	const escFuente = escalaAjuste(f.ancho, f.alto, p.w * k, p.h * k);
+	const izq = (p.w * k - f.ancho * escFuente) / 2;
+	return (
+		<div style={{position: 'relative', width: anchoVista, height: MONITOR.alto * k, transform: `scale(${empuje})`, filter: 'drop-shadow(0 40px 60px rgba(0,10,30,.5))'}}>
+			<div style={{position: 'absolute', left: p.x * k, top: p.y * k, width: p.w * k, height: p.h * k, overflow: 'hidden'}}>
+				<Contenido {...f} w={p.w * k} h={p.h * k} fondo={fondo} />
+				{children && (
+					<div style={{position: 'absolute', left: izq, top: 0, width: f.ancho, height: f.alto, transformOrigin: '0 0', transform: `scale(${escFuente})`}}>{children}</div>
+				)}
+			</div>
+			<Img src={staticFile(MONITOR.src)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%'}} />
+		</div>
+	);
+};
+
+/** Celular con contenido detrás del marco. El contenido se dibuja a 390 px de ancho (proporción de la pantalla). */
+export const CelularMarco: React.FC<{altoVista?: number; rot?: number; children: React.ReactNode}> = ({altoVista = 900, rot = 0, children}) => {
+	const k = altoVista / CELULAR.alto;
+	const p = CELULAR.pantalla;
+	const escContenido = (p.w * k) / 390;
+	return (
+		<div style={{position: 'relative', width: CELULAR.ancho * k, height: altoVista, transform: `rotate(${rot}deg)`, filter: 'drop-shadow(0 40px 60px rgba(0,10,30,.55))'}}>
+			<div style={{position: 'absolute', left: p.x * k, top: p.y * k, width: p.w * k, height: p.h * k, overflow: 'hidden', borderRadius: 100 * k, background: '#fff'}}>
+				<div style={{width: 390, height: (p.h * k) / escContenido, transformOrigin: '0 0', transform: `scale(${escContenido})`, position: 'relative'}}>{children}</div>
+			</div>
+			<Img src={staticFile(CELULAR.src)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%'}} />
+		</div>
+	);
+};
+
+/** Captura móvil real: la parte superior arriba y la barra inferior abajo, como en el celular. */
+export const CapturaMovil: React.FC<{src: string; ancho: number; alto: number; corteBarra: number; fondo?: string}> = ({src, ancho, alto, corteBarra, fondo = '#f9fafb'}) => {
+	const esc = 390 / ancho;
+	const altoPantalla = (CELULAR.pantalla.h / CELULAR.pantalla.w) * 390;
+	return (
+		<div style={{position: 'absolute', inset: 0, background: fondo}}>
+			<div style={{position: 'absolute', top: 44, left: 0, width: 390, height: corteBarra * esc, overflow: 'hidden'}}>
+				<Img src={staticFile(src)} style={{width: 390, height: alto * esc}} />
+			</div>
+			<div style={{position: 'absolute', top: altoPantalla - (alto - corteBarra) * esc - 22, left: 0, width: 390, height: (alto - corteBarra) * esc, overflow: 'hidden'}}>
+				<Img src={staticFile(src)} style={{width: 390, height: alto * esc, marginTop: -corteBarra * esc}} />
+			</div>
+		</div>
+	);
+};

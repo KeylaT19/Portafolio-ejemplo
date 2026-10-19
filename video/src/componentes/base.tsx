@@ -50,7 +50,6 @@ export const Fondo: React.FC<{variante?: 'portada' | 'cierre' | 'claro'; childre
 						? 'radial-gradient(rgba(15,86,179,.10) 1.5px, transparent 1.5px)'
 						: 'radial-gradient(rgba(255,255,255,.09) 1.5px, transparent 1.5px)',
 					backgroundSize: '28px 28px',
-					transform: `translateY(${(frame * 0.4) % 28}px)`,
 				}}
 			/>
 			<div
