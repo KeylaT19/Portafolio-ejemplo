@@ -60,7 +60,7 @@ const DisenoPaso: React.FC<{
 	const disp = <div style={{opacity: Math.min(1, v)}}>{children}</div>;
 	return (
 		<Fondo>
-			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 70, padding: '0 70px'}}>
+			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 70, padding: '130px 70px 20px'}}>
 				{lado === 'izq' ? (
 					<>
 						{texto}
@@ -128,25 +128,18 @@ const Clip: React.FC<{archivo: string; desde: number; etiqueta?: string; titular
 );
 
 /** Monitor con pantalla verde (toma de Envato) + texto inferior. */
-const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]; etiqueta?: string; logo?: boolean; children: React.ReactNode}> = ({
+const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]; etiqueta?: string; children: React.ReactNode}> = ({
 	desde,
 	titular,
 	resaltar,
 	etiqueta,
-	logo,
 	children,
 }) => {
-	const v = useEntrada(18, {damping: 14, mass: 0.7});
 	return (
 		<AbsoluteFill>
 			<MonitorVerde desde={desde}>{children}</MonitorVerde>
 			<AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(0,20,52,.92) 0%, rgba(0,20,52,.5) 22%, transparent 40%)'}} />
 			<div style={{position: 'absolute', left: 110, bottom: 80, display: 'flex', alignItems: 'center', gap: 36}}>
-				{logo && (
-					<div style={{opacity: v, transform: `scale(${0.7 + v * 0.3})`, background: 'rgba(255,255,255,.96)', borderRadius: 18, padding: '10px 22px'}}>
-						<Logo ancho={230} variante="color" />
-					</div>
-				)}
 				<div>
 					{etiqueta && (
 						<>
@@ -162,7 +155,7 @@ const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]
 };
 
 /** Espacio fijo para alternar ventanas dentro de un DisenoPaso. */
-const Caja: React.FC<{children: React.ReactNode}> = ({children}) => <div style={{width: 1100, height: 980, position: 'relative'}}>{children}</div>;
+const Caja: React.FC<{children: React.ReactNode}> = ({children}) => <div style={{width: 1000, height: 890, position: 'relative'}}>{children}</div>;
 
 /** Centra un elemento dentro de una parte de Tramos. */
 const Centro: React.FC<{children: React.ReactNode}> = ({children}) => (
@@ -176,7 +169,7 @@ const ChatPlano: React.FC = () => {
 		<Fondo variante="cierre">
 			<AbsoluteFill style={{display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '0 150px', gap: 120}}>
 				<div>
-					<CelularMarco altoVista={940}>
+					<CelularMarco altoVista={790}>
 						<ChatCaos />
 					</CelularMarco>
 				</div>
@@ -200,7 +193,7 @@ const P1Caos: React.FC = () => (
 );
 
 const P2Reveal: React.FC = () => (
-	<PlanoMonitor desde={0} titular="Todo tu mantenimiento en un solo lugar." resaltar={['solo', 'lugar']} logo>
+	<PlanoMonitor desde={0} titular="Todo tu mantenimiento en un solo lugar." resaltar={['solo', 'lugar']}>
 		<PantallaCompleta {...G2} desde={0.3} />
 	</PlanoMonitor>
 );
@@ -441,6 +434,30 @@ export const PLANOS: Plano[] = [
 
 export const DURACION_SITIO = PLANOS.reduce((a, p) => a + s(p.dur), 0);
 
+/**
+ * Logo fijo arriba a la izquierda. Versión clara sobre fondos oscuros y de color sobre fondos claros
+ * (tramos en segundos del video). Se oculta en el cierre, donde ya está el logo grande.
+ */
+const TRAMOS_LOGO: {de: number; a: number; v: 'claro' | 'color' | null}[] = [
+	{de: 7, a: 14, v: 'color'}, // monitor con pantalla verde (pared clara)
+	{de: 56, a: 60, v: 'color'}, // toma del técnico con cielo claro
+	{de: 70, a: 78, v: 'color'}, // monitor con pantalla verde
+	{de: 98.7, a: 105, v: null}, // cierre con logo grande
+];
+const LogoEsquina: React.FC = () => {
+	const f = useCurrentFrame();
+	const t = f / 30;
+	const tramo = TRAMOS_LOGO.find((r) => t >= r.de && t < r.a);
+	const variante = tramo ? tramo.v : 'claro';
+	const entra = interpolate(f, [6, 20], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+	if (!variante) return null;
+	return (
+		<div style={{position: 'absolute', left: 56, top: 36, zIndex: 250, opacity: entra, filter: variante === 'claro' ? 'drop-shadow(0 2px 10px rgba(0,20,52,.55))' : 'drop-shadow(0 2px 8px rgba(255,255,255,.6))'}}>
+			<Logo ancho={230} variante={variante} />
+		</div>
+	);
+};
+
 export const SitioWeb: React.FC<PropsSitio> = ({musica, inicioMusica = 0}) => {
 	let desde = 0;
 	const cortes: number[] = [];
@@ -462,6 +479,7 @@ export const SitioWeb: React.FC<PropsSitio> = ({musica, inicioMusica = 0}) => {
 			{cortes.map((f) => (
 				<Barrido key={f} en={f} />
 			))}
+			<LogoEsquina />
 			{musica && (
 				<Audio
 					src={staticFile(`audio/${musica}`)}

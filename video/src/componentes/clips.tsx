@@ -75,7 +75,7 @@ export const MonitorVerde: React.FC<{desde?: number; empuje?: number; children: 
 	);
 };
 
-/** Grabación o captura real completa (sin zoom), centrada en el lienzo de 1440×900 del monitor. */
+/** Grabación o captura real que llena el lienzo de 1440×900 del monitor con pantalla verde. */
 export const PantallaCompleta: React.FC<{src: string; ancho: number; alto: number; video?: boolean; desde?: number; velocidad?: number; fondo?: string}> = ({
 	src,
 	ancho,
@@ -86,8 +86,9 @@ export const PantallaCompleta: React.FC<{src: string; ancho: number; alto: numbe
 	fondo = '#f3f3f3',
 }) => {
 	const {fps} = useVideoConfig();
-	const esc = 1440 / ancho;
-	const estilo: React.CSSProperties = {position: 'absolute', left: 0, top: (900 - alto * esc) / 2, width: 1440, height: alto * esc};
+	// Llena la pantalla del monitor, anclado arriba a la izquierda.
+	const esc = Math.max(1440 / ancho, 900 / alto);
+	const estilo: React.CSSProperties = {position: 'absolute', left: 0, top: 0, width: ancho * esc, height: alto * esc};
 	return (
 		<AbsoluteFill style={{width: 1440, height: 900, background: fondo}}>
 			{video ? (
@@ -104,14 +105,10 @@ export const PantallaCompleta: React.FC<{src: string; ancho: number; alto: numbe
 const MONITOR = {src: 'marcos/monitor.png', ancho: 2000, alto: 1770, pantalla: {x: 92, y: 93, w: 1815, h: 956}};
 const CELULAR = {src: 'marcos/celular.png', ancho: 1108, alto: 2000, pantalla: {x: 174, y: 110, w: 809, h: 1752}};
 
-/** Si llenar el alto recorta menos del 6 % del ancho, se llena; si no, se ajusta al ancho (arriba). */
-const escalaAjuste = (ancho: number, alto: number, w: number, h: number) => {
-	const porAncho = w / ancho;
-	const porAlto = h / alto;
-	return porAlto > porAncho && porAncho / porAlto > 0.94 ? porAlto : porAncho;
-};
+/** Zoom que llena toda el área (sin huecos); lo que sobra se recorta por la derecha o por abajo. */
+const escalaAjuste = (ancho: number, alto: number, w: number, h: number) => Math.max(w / ancho, h / alto);
 
-/** Fuente real (grabación o captura) colocada en un área: ajusta al ancho y, si casi coincide la proporción, llena el área. */
+/** Fuente real (grabación o captura) que llena el área, anclada arriba a la izquierda. */
 const Contenido: React.FC<{src: string; ancho: number; alto: number; video?: boolean; desde?: number; velocidad?: number; w: number; h: number; fondo: string}> = ({
 	src,
 	ancho,
@@ -125,7 +122,8 @@ const Contenido: React.FC<{src: string; ancho: number; alto: number; video?: boo
 }) => {
 	const {fps} = useVideoConfig();
 	const esc = escalaAjuste(ancho, alto, w, h);
-	const estilo: React.CSSProperties = {position: 'absolute', left: (w - ancho * esc) / 2, top: 0, width: ancho * esc, height: alto * esc};
+	// Anclado arriba a la izquierda.
+	const estilo: React.CSSProperties = {position: 'absolute', left: 0, top: 0, width: ancho * esc, height: alto * esc};
 	return (
 		<div style={{position: 'absolute', inset: 0, background: fondo, overflow: 'hidden'}}>
 			{video ? (
@@ -148,17 +146,16 @@ export const MonitorReal: React.FC<{
 	anchoVista?: number;
 	fondo?: string;
 	children?: React.ReactNode;
-}> = ({anchoVista = 1100, fondo = '#f3f3f3', children, ...f}) => {
+}> = ({anchoVista = 1000, fondo = '#f3f3f3', children, ...f}) => {
 	const k = anchoVista / MONITOR.ancho;
 	const p = MONITOR.pantalla;
 	const escFuente = escalaAjuste(f.ancho, f.alto, p.w * k, p.h * k);
-	const izq = (p.w * k - f.ancho * escFuente) / 2;
 	return (
 		<div style={{position: 'relative', width: anchoVista, height: MONITOR.alto * k, filter: 'drop-shadow(0 40px 60px rgba(0,10,30,.5))'}}>
 			<div style={{position: 'absolute', left: p.x * k, top: p.y * k, width: p.w * k, height: p.h * k, overflow: 'hidden'}}>
 				<Contenido {...f} w={p.w * k} h={p.h * k} fondo={fondo} />
 				{children && (
-					<div style={{position: 'absolute', left: izq, top: 0, width: f.ancho, height: f.alto, transformOrigin: '0 0', transform: `scale(${escFuente})`}}>{children}</div>
+					<div style={{position: 'absolute', left: 0, top: 0, width: f.ancho, height: f.alto, transformOrigin: '0 0', transform: `scale(${escFuente})`}}>{children}</div>
 				)}
 			</div>
 			<Img src={staticFile(MONITOR.src)} style={{position: 'absolute', inset: 0, width: '100%', height: '100%'}} />
