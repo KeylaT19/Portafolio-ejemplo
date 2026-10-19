@@ -6,3 +6,5 @@ public/clips
 public/audio
 # Grabaciones y capturas del sistema (datos internos de QA): no se suben.
 public/sistema
+# Marcos de dispositivo (imágenes de banco): no se suben.
+public/marcos
