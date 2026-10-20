@@ -26,7 +26,8 @@ export type PropsSitio = {
  */
 const LOCUCION: {archivo: string; de: number; a: number; en: number}[] = [
 	{archivo: 'locucion-1.mp3', de: 0, a: 8.0, en: 0.2}, // ¿Dónde está el historial…? …es que no existe.
-	{archivo: 'locucion-1.mp3', de: 8.1, a: 14.4, en: 7.9}, // Esto es GC GMAO. Un solo lugar…
+	{archivo: 'locucion-gcgmao.mp3', de: 0, a: 1.57, en: 9}, // Esto es GC GMAO (audio corregido)
+	{archivo: 'locucion-1.mp3', de: 11.85, a: 14.4, en: 11}, // Un solo lugar para el mantenimiento de tu club.
 	{archivo: 'locucion-1.mp3', de: 14.45, a: 23.35, en: 14.5}, // Paso 1. Organizas… código QR.
 	{archivo: 'locucion-1.mp3', de: 23.35, a: 30.2, en: 26.4}, // Marca, modelo, garantía… puede citar.
 	{archivo: 'locucion-1.mp3', de: 30.25, a: 35.19, en: 34.6}, // Paso 2. Quien detecta la falla…
