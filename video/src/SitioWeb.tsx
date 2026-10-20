@@ -48,9 +48,7 @@ const NUEVA_OT = {src: 'sistema/nueva-ot.png', ancho: 1211, alto: 578};
 const UBICACION = {src: 'sistema/ubicacion.png', ancho: 1052, alto: 549};
 const CALENDARIO = {src: 'sistema/calendario.png', ancho: 1147, alto: 578};
 const OT_MOVIL = {src: 'sistema/ot-movil.png', ancho: 490, alto: 591};
-const DASHBOARD = {src: 'sistema/dashboard.png', ancho: 1112, alto: 593};
 const DASH_GRAFICAS = {src: 'sistema/dashboard-graficas.png', ancho: 1035, alto: 593};
-const DASH_GRAFICAS_ANCHO = {src: 'sistema/dashboard-graficas-ancho.png', ancho: 1188, alto: 593};
 
 // ───────────────────────── Piezas de composición ─────────────────────────
 
@@ -166,7 +164,7 @@ const PlanoMonitor: React.FC<{desde: number; titular: string; resaltar: string[]
 				<div>
 					{etiqueta && (
 						<>
-							<EtiquetaPaso texto={etiqueta} retraso={10} />
+							<EtiquetaPaso texto={etiqueta} retraso={10} solido />
 							<div style={{height: 18}} />
 						</>
 					)}
@@ -330,12 +328,7 @@ const P7Campo: React.FC = () => (
 
 const P8Seguimiento: React.FC = () => (
 	<PlanoMonitor desde={5} etiqueta="Seguimiento" titular="Cada orden, su estado y quién la atiende." resaltar={['estado']}>
-		<Sequence durationInFrames={s(4)}>
-			<PantallaCompleta {...DASH_GRAFICAS_ANCHO} />
-		</Sequence>
-		<Sequence from={s(4)}>
-			<PantallaCompleta {...DASHBOARD} />
-		</Sequence>
+		<PantallaCompleta {...DASH_GRAFICAS} />
 	</PlanoMonitor>
 );
 

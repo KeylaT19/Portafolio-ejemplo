@@ -44,15 +44,20 @@ export const ClipFondo: React.FC<{
 
 /**
  * Clip del monitor con pantalla verde: el contenido (1440×900) se coloca sobre el verde
- * con la perspectiva medida cuadro por cuadro (src/ui/esquinas-monitor.json, a 25 fps).
+ * con la perspectiva medida en el clip (src/ui/esquinas-monitor.json, mediana de todos los cuadros).
  * Cuando llegue la grabación real del sistema, `children` pasa a ser un <OffthreadVideo>.
  */
+const ESQUINAS_FIJAS: P[] = (() => {
+	const lista = (esquinasMonitor as (P[] | null)[]).filter(Boolean) as P[][];
+	const mediana = (v: number[]) => [...v].sort((a, b) => a - b)[Math.floor(v.length / 2)];
+	return [0, 1, 2, 3].map((k) => [mediana(lista.map((q) => q[k][0])), mediana(lista.map((q) => q[k][1]))] as P);
+})();
+
 export const MonitorVerde: React.FC<{desde?: number; empuje?: number; children: React.ReactNode}> = ({desde = 0, empuje = 0, children}) => {
 	const frame = useCurrentFrame();
 	const {fps, durationInFrames} = useVideoConfig();
-	const lista = esquinasMonitor as (P[] | null)[];
-	const i = Math.min(lista.length - 1, Math.round((desde + frame / fps) * 25));
-	const q = (lista[i] ?? lista.find(Boolean)!) as P[];
+	// La cámara del clip está fija: se usa la mediana de las esquinas medidas para que la imagen no tiemble.
+	const q = ESQUINAS_FIJAS;
 	// Se agranda 3 px hacia afuera para tapar el borde verde.
 	const cx = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4;
 	const cy = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;

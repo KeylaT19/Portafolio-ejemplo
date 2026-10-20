@@ -139,11 +139,12 @@ export const TextoCinetico: React.FC<{
 };
 
 /** Píldora de paso: «PASO 1 · Organiza». */
-export const EtiquetaPaso: React.FC<{numero?: number; texto: string; retraso?: number; claro?: boolean}> = ({
+export const EtiquetaPaso: React.FC<{numero?: number; texto: string; retraso?: number; claro?: boolean; solido?: boolean}> = ({
 	numero,
 	texto,
 	retraso = 0,
 	claro = false,
+	solido = false,
 }) => {
 	const v = useEntrada(retraso);
 	return (
@@ -154,8 +155,10 @@ export const EtiquetaPaso: React.FC<{numero?: number; texto: string; retraso?: n
 				gap: 18,
 				padding: '12px 28px 12px 12px',
 				borderRadius: 999,
-				background: claro ? c.marcaTenue : 'rgba(56,189,248,.14)',
-				border: `1.5px solid ${claro ? 'rgba(15,86,179,.25)' : 'rgba(56,189,248,.45)'}`,
+				// solido: fondo de marca opaco, para que se lea sobre tomas claras.
+				background: solido ? c.marca : claro ? c.marcaTenue : 'rgba(56,189,248,.14)',
+				border: `1.5px solid ${solido ? c.acento : claro ? 'rgba(15,86,179,.25)' : 'rgba(56,189,248,.45)'}`,
+				boxShadow: solido ? '0 8px 24px rgba(0,20,52,.35)' : undefined,
 				transform: `translateX(${(1 - v) * -60}px) scale(${0.85 + v * 0.15})`,
 				opacity: v,
 				fontFamily: fuente,
@@ -184,7 +187,7 @@ export const EtiquetaPaso: React.FC<{numero?: number; texto: string; retraso?: n
 					fontWeight: 600,
 					letterSpacing: '0.04em',
 					textTransform: 'uppercase',
-					color: claro ? c.marca : c.acento,
+					color: solido ? '#fff' : claro ? c.marca : c.acento,
 					paddingLeft: numero === undefined ? 16 : 0,
 				}}
 			>
